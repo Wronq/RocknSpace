@@ -5,21 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D10;
 using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D10.Buffer;
 using Device = SharpDX.Direct3D10.Device;
-
+using RocknSpace.Utils;
 
 namespace RocknSpace
 {
     class GameShape
     {
-        public Vector[] Vertices;
-        public Vector[] Axes;
+        public Vector2[] Vertices;
+        public Vector2[] Axes;
 
         public DataStream data;
 
@@ -29,7 +28,7 @@ namespace RocknSpace
             for (int i = 0; i < Vertices.Length; i++)
             {
                 int k = i == Vertices.Length - 1 ? 0 : i + 1;
-
+                
                 inertia += density / 12.0f * Math.Abs(Vertices[k].Cross(Vertices[i])) * (Vertices[i].LengthSquared() + Vertices[i].Dot(Vertices[k]) + Vertices[k].LengthSquared());
             }
             
@@ -53,27 +52,27 @@ namespace RocknSpace
         public float GetRadius()
         {
             float radius = 0;
-            foreach (Vector vertex in Vertices)
+            foreach (Vector2 vertex in Vertices)
                 if (vertex.LengthSquared() > radius)
                     radius = vertex.LengthSquared();
 
             return (float)Math.Sqrt(radius);
         }
 
-        public GameShape(Vector[] Vertices)
+        public GameShape(Vector2[] Vertices)
         {
             this.Vertices = Vertices;
 
-            Vector Center = Vector.Zero;
+            Vector2 Center = Vector2.Zero;
 
-            foreach (Vector vertex in Vertices)
+            foreach (Vector2 vertex in Vertices)
                 Center += vertex;
             Center /= Vertices.Count();
 
             for (int i = 0; i < Vertices.Length; i++)
                 Vertices[i] -= Center;
 
-            Axes = new Vector[Vertices.Length];
+            Axes = new Vector2[Vertices.Length];
 
             for (int i = 0; i < Vertices.Length; i++)
             {
@@ -82,19 +81,22 @@ namespace RocknSpace
                 Axes[i] = (Vertices[k] - Vertices[i]).Perpendicular();
             }
 
+            float width = 4.0f;
 
             data = new DataStream(Vertices.Length * 2 * 24 + 48, true, true);
             for (int i = 0; i < Vertices.Length; i++)
             {
                 Vector3 a = new Vector3(Vertices[i].X, Vertices[i].Y, 1);
-                Vector3 b = new Vector3(Vertices[i].X * 0.9f, Vertices[i].Y * 0.9f, 1);
+                float len = a.Length();
+                Vector3 b = new Vector3(Vertices[i].X * (1 - width / len), Vertices[i].Y * (1 - width / len), 1);
 
                 data.Write(a);
                 data.Write(b);
             }
 
             data.Write(new Vector3(Vertices[0].X, Vertices[0].Y, 1));
-            data.Write(new Vector3(Vertices[0].X * 0.9f, Vertices[0].Y * 0.9f, 1));
+            float len_ = Vertices[0].Length();
+            data.Write(new Vector3(Vertices[0].X * (1 - width / len_), Vertices[0].Y * (1 - width / len_), 1));
 
             data.Position = 0;
         }

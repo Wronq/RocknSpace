@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 
-namespace RocknSpace
+namespace RocknSpace.Utils
 {
     static class ColorUtil
     {

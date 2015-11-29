@@ -9,17 +9,11 @@ namespace RocknSpace
 {
     class EntityManager
     {
-        static List<Entity> Entities = new List<Entity>();
+        public static List<Entity> Entities = new List<Entity>();
         static List<Entity> addedEntities = new List<Entity>();
 
         static bool isUpdating = false;
         public static int Count { get { return Entities.Count; } }
-
-        public static IEnumerable<GameShape> GetShapes()
-        {
-            return from e in Entities
-                   select e.Shape;
-        }
 
         public static void Add(Entity Entity)
         {

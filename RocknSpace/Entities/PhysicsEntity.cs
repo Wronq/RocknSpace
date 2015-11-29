@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Media;
 using System.Windows.Media;
+using RocknSpace.Utils;
+using SharpDX;
 
 namespace RocknSpace
 {
@@ -15,8 +17,8 @@ namespace RocknSpace
         protected float Inertia;
         protected float InertiaInv;
 
-        protected Vector Velocity;
-        protected Vector Force;
+        protected Vector2 Velocity;
+        protected Vector2 Force;
 
         protected float Torque;
         protected float Omega;
@@ -24,17 +26,25 @@ namespace RocknSpace
         public PhysicsEntity()
         {
             Mass = MassInv = Inertia = InertiaInv = 0.0f;
-            Velocity = Vector.Zero;
-            Force = Vector.Zero;
+            Velocity = Vector2.Zero;
+            Force = Vector2.Zero;
+        }
 
-            /*translateMatrix = new TransformGroup();
-            translateMatrix.Children.Add(new RotateTransform(Orientation));
-            translateMatrix.Children.Add(new TranslateTransform(Position.X, Position.Y));*/
+        public PhysicsEntity(GameShape Shape)
+        {
+            float dens = 1.0f;
+            this.Shape = Shape;
+
+            Mass = Shape.GetMass(dens);
+            MassInv = 1 / Mass;
+
+            Inertia = Shape.GetInertia(dens);
+            InertiaInv = 1 / Inertia;
         }
 
         public override void PreUpdate()
         {
-            Force = Vector.Zero;
+            Force = Vector2.Zero;
             Torque = 0.0f;
 
             Position += Velocity * Time.Dt;
@@ -47,7 +57,7 @@ namespace RocknSpace
 
         public override void PostUpdate()
         {
-            Vector acceleration = Force * MassInv;
+            Vector2 acceleration = Force * MassInv;
             Velocity += acceleration * 0.5f * Time.Dt;
 
             Torque += Omega;

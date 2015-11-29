@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RocknSpace
+namespace RocknSpace.Utils
 {
-    struct Vector
+    /*struct Vector
     {
         public float X;
         public float Y;
@@ -87,5 +87,5 @@ namespace RocknSpace
         {
             return new Point(v.X, v.Y);
         }
-    }
+    }*/
 }

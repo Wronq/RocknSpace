@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
-using System.Windows.Threading;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D10;
@@ -20,35 +10,33 @@ using SharpDX.DXGI;
 using RocknSpace.DirectWpf;
 using Buffer = SharpDX.Direct3D10.Buffer;
 using Device = SharpDX.Direct3D10.Device;
+using RocknSpace.Utils;
+using RocknSpace.Entities;
 
 namespace RocknSpace
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window, IScene
+    class GameRoot : IScene
     {
-        Random rand = new Random();
+        private Random Rand;
         private ISceneHost Host;
         private InputLayout VertexLayout;
         private InputLayout ShapeLayout;
         private Buffer Particles;
-        private Buffer constantBuffer;
+        private Buffer Vertices;
         private Effect ParticleEffect;
         private Effect ShapeEffect;
 
-        public MainWindow()
-        {
-            InitializeComponent();
+        private DateTime Last = DateTime.Now;
+        private int counter = 0;
+        private float sumFps = 0;
 
-            this.Canvas1.Scene = this;
+        public GameRoot()
+        {
+            Rand = new Random();
 
             EntityManager.Add(PlayerShip.Instance);
+            EntityManager.Add(Rock.Create(new Vector2(0, 0), 500000));
         }
-
-        DateTime Last = DateTime.Now;
-        int counter = 0;
-        float sumFps = 0;
 
         public void Attach(ISceneHost host)
         {
@@ -93,10 +81,11 @@ namespace RocknSpace
         public void Detach()
         {
             Disposer.RemoveAndDispose(ref this.Particles);
+            Disposer.RemoveAndDispose(ref this.Vertices);
             Disposer.RemoveAndDispose(ref this.VertexLayout);
             Disposer.RemoveAndDispose(ref this.ShapeLayout);
             Disposer.RemoveAndDispose(ref this.ParticleEffect);
-            Disposer.RemoveAndDispose(ref this.constantBuffer);
+            Disposer.RemoveAndDispose(ref this.ShapeEffect);
         }
 
         public void Update(TimeSpan timeSpan)
@@ -110,17 +99,18 @@ namespace RocknSpace
 
             if (counter++ % 120 == 0)
             {
-                this.Title = (sumFps / 120).ToString();
+                //this.Title = (sumFps / 120).ToString();
                 sumFps = 0;
 
                 for (int i = 0; i < 1200; i++)
                 {
-                    float speed = 12.0f * (1.0f - 1 / rand.NextFloat(1, 10));
+                    float speed = 12.0f * (1.0f - 1 / Rand.NextFloat(1, 10));
 
-                    ParticleManager.CreateParticle(new Vector(350, 250), new Color4(0, 1, 0, 0.3f), 190, Vector.One, rand.NextVector(speed, speed), 0.3f);
+                    ParticleManager.CreateParticle(new Vector2(350, 250), new Color4(0, 1, 0, 0.3f), 190, Vector2.One, Rand.NextVector2(speed, speed), 0.3f);
                 }
+                //EntityManager.Entities.Last().isExpired = true;
+                EntityManager.Add(Rock.Create(new Vector2(0, 0), 500000));
             }
- 
 
             EntityManager.Update();
             ParticleManager.Update();
@@ -133,14 +123,14 @@ namespace RocknSpace
                 var particle = ParticleManager.particleList[i];
 
                 Vector2 a = new Vector2(particle.Position.X, particle.Position.Y);
-                Vector2 b = new Vector2(particle.Scale.X / 5, -particle.Orientation);
+                Vector2 b = new Vector2(particle.Scale.X, -particle.Orientation);
 
                 particles.WriteRange(new[] { a, b });
                 particles.Write(particle.Color);
             }
-
             particles.Position = 0;
-            constantBuffer = new Buffer(device, Utilities.SizeOf<Matrix>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None);
+
+            Disposer.RemoveAndDispose(ref this.Particles);
 
             this.Particles = new Buffer(device, particles, new BufferDescription()
             {
@@ -165,65 +155,40 @@ namespace RocknSpace
             EffectPass pass = technique.GetPassByIndex(0);
             pass.Apply();
 
-            /*var renderToTexture = new Texture2D(device, new Texture2DDescription
-            {
-                ArraySize = 1,
-                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
-                CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.R8G8B8A8_UNorm,
-                Width = 1024,
-                Height = 1024,
-                MipLevels = 1,
-                OptionFlags = ResourceOptionFlags.None,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = ResourceUsage.Default
-            });
-
-            var renderToTextureRTV = new RenderTargetView(device, renderToTexture);
-            var renderToTextureSRV = new ShaderResourceView(device, renderToTexture);*/
-
-
-            
             device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.Particles, 32, 0));
+            this.ParticleEffect.GetVariableByName("Projection").AsVector().Set(new Vector2(Host.Width, Host.Height));
             device.Draw(ParticleManager.particleList.Count, 0);
-
-
-
-
-
-
 
             technique = this.ShapeEffect.GetTechniqueByIndex(0);
             pass = technique.GetPassByIndex(0);
-            pass.Apply();
+            
 
             device.InputAssembler.InputLayout = this.ShapeLayout;
             device.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleStrip;
+           
 
-            PlayerShip.Instance.Shape.data.Position = 0;
-            this.Particles = new Buffer(device, PlayerShip.Instance.Shape.data, new BufferDescription()
+            foreach (Entity entity in EntityManager.Entities)
             {
-                BindFlags = BindFlags.VertexBuffer,
-                CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.None,
-                SizeInBytes = PlayerShip.Instance.Shape.Vertices.Length * 2 * 12 + 24,
-                Usage = ResourceUsage.Default
-            });
-            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.Particles, 12, 0));
+                this.Vertices = new Buffer(device, entity.Shape.data, new BufferDescription()
+                {
+                    BindFlags = BindFlags.VertexBuffer,
+                    CpuAccessFlags = CpuAccessFlags.None,
+                    OptionFlags = ResourceOptionFlags.None,
+                    SizeInBytes = entity.Shape.Vertices.Length * 2 * 12 + 24,
+                    Usage = ResourceUsage.Default
+                });
 
-            this.ShapeEffect.GetVariableByName("Color").AsVector().Set(new Color4(1, 0, 0, 0.1f));
-            this.ShapeEffect.GetVariableByName("Position").AsVector().Set(new Vector3(PlayerShip.Instance.Position.X, PlayerShip.Instance.Position.Y, PlayerShip.Instance.Orientation));
+                device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.Vertices, 12, 0));
 
-            device.Draw(PlayerShip.Instance.Shape.Vertices.Length * 2 + 2, 0);
+                this.ShapeEffect.GetVariableByName("Color").AsVector().Set(entity.Color);
+                this.ShapeEffect.GetVariableByName("Position").AsVector().Set(new Vector3(entity.Position, entity.Orientation));
+                this.ShapeEffect.GetVariableByName("Projection").AsVector().Set(new Vector2(Host.Width, Host.Height));
 
-            /*for (int i = 0; i < PlayerShip.Instance.Shape.Vertices.Length * 2 + 2; ++i)
-            {
-                device.Draw(4, i);
-            }*/
-            //device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.Vertices, 32, 0));
+                pass.Apply();
+                device.Draw(entity.Shape.Vertices.Length * 2 + 2, 0);
 
-            //pass.Apply();
-            //device.Draw(3, 0);
-        }
+                Disposer.RemoveAndDispose(ref this.Vertices);
+            }
+        }    
     }
 }

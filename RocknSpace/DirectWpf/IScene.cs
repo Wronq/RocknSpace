@@ -25,6 +25,8 @@ namespace RocknSpace.DirectWpf
     public interface ISceneHost
     {
         Device Device { get; }
+        float Width { get; }
+        float Height { get; }
     }
 
     public interface IScene

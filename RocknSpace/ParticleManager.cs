@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using SharpDX;
+using RocknSpace.Utils;
 
 namespace RocknSpace
 {
@@ -15,10 +15,10 @@ namespace RocknSpace
     {
         public class Particle
         {
-            public Vector Position, Velocity;
+            public Vector2 Position, Velocity;
             public float Orientation;
 
-            public Vector Scale = Vector.One;
+            public Vector2 Scale = Vector2.One;
 
             public Color4 Color;
             public float Duration;
@@ -28,7 +28,7 @@ namespace RocknSpace
             public Particle()
             {
                 Orientation = 0;
-                Position = Vector.One * 50;
+                Position = Vector2.One * 50;
             }
 
             public void Update()
@@ -68,7 +68,7 @@ namespace RocknSpace
                 }*/
                 // denormalized floats cause significant performance issues
                 if (Math.Abs(Velocity.X) + Math.Abs(Velocity.Y) < 0.00000000001f)
-                    Velocity = Vector.Zero;
+                    Velocity = Vector2.Zero;
 
                 Velocity *= 0.97f;       // particles gradually slow down
             }
@@ -110,7 +110,7 @@ namespace RocknSpace
                 particleList[i] = new Particle();
         }
 
-        public static void CreateParticle(Vector position, Color4 tint, float duration, Vector scale, Vector velocity, float lengthMultiplier, float theta = 0)
+        public static void CreateParticle(Vector2 position, Color4 tint, float duration, Vector2 scale, Vector2 velocity, float lengthMultiplier, float theta = 0)
         {
             Particle particle;
             if (particleList.Count == particleList.Capacity)

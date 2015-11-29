@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 using System;
 
-namespace RocknSpace.DirectWpf
+namespace RocknSpace.Utils
 {
     class Disposer
     {

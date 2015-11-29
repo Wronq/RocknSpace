@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="RocknSpace.Menu.OptionsScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RocknSpace"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <local:BoolToOnOffConverter x:Key="BoolToOnOffConverter" />
+    </UserControl.Resources>
+    <ContentControl Style="{StaticResource MenuBackground}">
+        <Grid>
+            <Label HorizontalAlignment="Center" Content="rock'N'space" Style="{StaticResource MenuTitle}" />
+            <Label HorizontalAlignment="Center" Content="options" Style="{StaticResource MenuLabel}" Margin="0,156,0,0" />
+            <StackPanel Margin="0,212,0,0" Width="600">
+                <Button Style="{StaticResource MenuButton}" Content="controls" Click="Controls_Click"/>
+                <Grid>
+                    <Label HorizontalAlignment="Left" Content="sound" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                    <Slider Style="{StaticResource Horizontal_Slider}" Value="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Sound, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="250" Minimum="0" Maximum="100"/>
+                </Grid>
+                <Grid>
+                    <Label HorizontalAlignment="Left" Content="music" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                    <Slider Style="{StaticResource Horizontal_Slider}" Value="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Music, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="250" Minimum="0" Maximum="100"/>
+                </Grid>
+                <Grid>
+                    <Label HorizontalAlignment="Left" Content="blur" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Blur, Converter={StaticResource BoolToOnOffConverter}}" Click="Blur_Click"/>
+                </Grid>
+                <Grid>
+                    <Label HorizontalAlignment="Left" Content="fullscreen" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Fullscreen, Converter={StaticResource BoolToOnOffConverter}}" Click="Fullscreen_Click"/>
+                </Grid>
+                <Button Style="{StaticResource MenuButton}" Content="back" Click="Back_Click"/>
+            </StackPanel>
+        </Grid>
+    </ContentControl>
+</UserControl>

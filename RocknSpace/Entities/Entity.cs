@@ -1,20 +1,23 @@
-﻿using System;
+﻿using RocknSpace.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDX;
 
 namespace RocknSpace
 {
     abstract class Entity
     {
+        protected static Random rand = new Random();
+
         public GameShape Shape;
 
-        public Vector Position;
+        public Vector2 Position;
         public float Orientation;
-
-        public float Radius;
-
+        public Color4 Color;
+        
         public bool isExpired;
 
         public abstract void PreUpdate();

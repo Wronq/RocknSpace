@@ -31,6 +31,7 @@ namespace RocknSpace.DirectWpf
     using SharpDX.D3DCompiler;
     using Device = SharpDX.Direct3D10.Device1;
     using Buffer = SharpDX.Direct3D10.Buffer;
+    using Utils;
 
     public partial class DPFCanvas : Image, ISceneHost
     {
@@ -63,6 +64,11 @@ namespace RocknSpace.DirectWpf
         public Color4 ClearColor = SharpDX.Color.Black;
 
         BloomSettings Settings = new BloomSettings(0.15f, 8, 1.5f, 1, 1.5f, 1.5f);
+
+        private float width, height;
+        float ISceneHost.Width { get { return width; } }
+
+        float ISceneHost.Height { get{ return height; } }
 
         public DPFCanvas()
         {
@@ -103,8 +109,6 @@ namespace RocknSpace.DirectWpf
             {
                 ShaderBytecode shaderBytes = ShaderBytecode.CompileFromFile("Shaders\\Bloom.fx", "fx_4_0", ShaderFlags.None, EffectFlags.None, null, null);
                 this.BloomEffect = new Effect(Device, shaderBytes);
-
-
             }
             catch
             { }
@@ -112,15 +116,10 @@ namespace RocknSpace.DirectWpf
             EffectTechnique technique = this.BloomEffect.GetTechniqueByIndex(0);
             EffectPass pass = technique.GetPassByIndex(0);
 
-            try
-            {
                 this.VertexLayout = new InputLayout(Device, pass.Description.Signature, new[] {
                     new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0)
                 });
-            }
-            catch
-            { }
 
             DataStream vertices = new DataStream(4 * 6 * 4, true, true);
             vertices.Write(new Vector4(-1.0f, 1.0f, 0.0f, 1.0f));
@@ -194,15 +193,15 @@ namespace RocknSpace.DirectWpf
             Disposer.RemoveAndDispose(ref this.ShaderTarget2View);
             Disposer.RemoveAndDispose(ref this.DepthStencil);
 
-            int width = Math.Max((int)base.ActualWidth, 100);
-            int height = Math.Max((int)base.ActualHeight, 100);
+            width = Math.Max((int)base.ActualWidth, 100);
+            height = Math.Max((int)base.ActualHeight, 100);
 
             Texture2DDescription colordesc = new Texture2DDescription
             {
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = width,
-                Height = height,
+                Width = (int)width,
+                Height = (int)height,
                 MipLevels = 1,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = ResourceUsage.Default,
@@ -215,8 +214,8 @@ namespace RocknSpace.DirectWpf
             {
                 BindFlags = BindFlags.DepthStencil,
                 Format = Format.D32_Float_S8X24_UInt,
-                Width = width,
-                Height = height,
+                Width = (int)width,
+                Height = (int)height,
                 MipLevels = 1,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = ResourceUsage.Default,
@@ -236,8 +235,8 @@ namespace RocknSpace.DirectWpf
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
                 CpuAccessFlags = CpuAccessFlags.None,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = width,
-                Height = height,
+                Width = (int)width,
+                Height = (int)height,
                 MipLevels = 1,
                 OptionFlags = ResourceOptionFlags.Shared,
                 SampleDescription = new SampleDescription(1, 0),
@@ -250,8 +249,8 @@ namespace RocknSpace.DirectWpf
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
                 CpuAccessFlags = CpuAccessFlags.None,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = width,
-                Height = height,
+                Width = (int)width,
+                Height = (int)height,
                 MipLevels = 1,
                 OptionFlags = ResourceOptionFlags.Shared,
                 SampleDescription = new SampleDescription(1, 0),

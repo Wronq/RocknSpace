@@ -15,6 +15,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -97,21 +97,44 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BloomEffect.cs" />
-    <Compile Include="ColorUtil.cs" />
+    <Compile Include="Collision.cs" />
+    <Compile Include="Entities\Rock.cs" />
+    <Compile Include="GameRoot.cs" />
+    <Compile Include="Highscores.cs" />
+    <Compile Include="Menu\ControlsScreen.xaml.cs">
+      <DependentUpon>ControlsScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\HighscoresScreen.xaml.cs">
+      <DependentUpon>HighscoresScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\MainScreen.xaml.cs">
+      <DependentUpon>MainScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\MenuManager.cs" />
+    <Compile Include="Menu\OptionsScreen.xaml.cs">
+      <DependentUpon>OptionsScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\ProfilesScreen.xaml.cs">
+      <DependentUpon>ProfilesScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profile.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="DirectWpf\BloomSettings.cs" />
-    <Compile Include="DirectWpf\Disposer.cs" />
+    <Compile Include="Utils\Disposer.cs" />
     <Compile Include="DirectWpf\DPFCanvas.cs" />
     <Compile Include="DirectWpf\DX10ImageSource.cs" />
     <Compile Include="DirectWpf\IScene.cs" />
-    <Compile Include="Entity.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="EntityManager.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="ParticleManager.cs" />
-    <Compile Include="PhysicsEntity.cs" />
-    <Compile Include="PlayerShip.cs" />
+    <Compile Include="Entities\PhysicsEntity.cs" />
+    <Compile Include="Entities\PlayerShip.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="Vector.cs" />
-    <Page Include="GameRoot.xaml">
+    <Compile Include="Utils\Vector.cs" />
+    <Compile Include="ValueConverters.cs" />
+    <Page Include="AppWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -120,10 +143,30 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameShape.cs" />
-    <Compile Include="GameRoot.xaml.cs">
-      <DependentUpon>GameRoot.xaml</DependentUpon>
+    <Compile Include="AppWindow.xaml.cs">
+      <DependentUpon>AppWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Menu\ControlsScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\HighscoresScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\MainScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\OptionsScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\ProfilesScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -143,6 +186,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Fonts\aurora.regular.ttf" />
+    <Resource Include="Fonts\sf-outer-limits.distorted.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -157,9 +202,6 @@
     <None Include="Shaders\Bloom.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Shaders\BloomCombine.fx" />
-    <Content Include="Shaders\BloomExtract.fx" />
-    <Content Include="Shaders\GaussianBlur.fx" />
     <None Include="Shaders\Shape.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -184,6 +226,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>::fxc /T ps_2_0 /E main /Fo "$(SolutionDir)RocknSpace\ShaderSource\Bloom.ps" "$(SolutionDir)RocknSpace\ShaderSource\Bloom.fx"</PreBuildEvent>

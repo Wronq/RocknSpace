@@ -49,6 +49,7 @@ namespace RocknSpace.DirectWpf
     using System.Windows;
     using System.Windows.Interop;
     using SharpDX.Direct3D9;
+    using Utils;
 
     class DX10ImageSource : D3DImage, IDisposable
     {
