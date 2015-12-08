@@ -96,13 +96,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BloomEffect.cs" />
-    <Compile Include="Collision.cs" />
+    <Compile Include="Collision\BVHTree.cs" />
+    <Compile Include="Collision\CircleShape.cs" />
+    <Compile Include="Collision\CollisionData.cs" />
+    <Compile Include="Collision\IShape.cs" />
+    <Compile Include="Collision\MinkowskiDiff.cs" />
+    <Compile Include="Collision\Simplex.cs" />
     <Compile Include="Entities\Rock.cs" />
+    <Compile Include="Entities\Wall.cs" />
     <Compile Include="GameRoot.cs" />
     <Compile Include="Highscores.cs" />
+    <Compile Include="HUD.xaml.cs">
+      <DependentUpon>HUD.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Menu\ControlsScreen.xaml.cs">
       <DependentUpon>ControlsScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\HelpScreen.xaml.cs">
+      <DependentUpon>HelpScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Menu\HighscoresScreen.xaml.cs">
       <DependentUpon>HighscoresScreen.xaml</DependentUpon>
@@ -113,6 +124,12 @@
     <Compile Include="Menu\MenuManager.cs" />
     <Compile Include="Menu\OptionsScreen.xaml.cs">
       <DependentUpon>OptionsScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\PauseScreen.xaml.cs">
+      <DependentUpon>PauseScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\ProfileScreen.xaml.cs">
+      <DependentUpon>ProfileScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Menu\ProfilesScreen.xaml.cs">
       <DependentUpon>ProfilesScreen.xaml</DependentUpon>
@@ -147,7 +164,15 @@
       <DependentUpon>AppWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="HUD.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Menu\ControlsScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\HelpScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,6 +185,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Menu\OptionsScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\PauseScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Menu\ProfileScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,7 +259,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>::fxc /T ps_2_0 /E main /Fo "$(SolutionDir)RocknSpace\ShaderSource\Bloom.ps" "$(SolutionDir)RocknSpace\ShaderSource\Bloom.fx"</PreBuildEvent>

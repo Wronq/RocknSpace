@@ -10,14 +10,14 @@
         <Grid>
             <Label HorizontalAlignment="Center" Content="rock'N'space" Style="{StaticResource MenuTitle}" />
             <StackPanel Margin="0,212,0,0">
-                <Button Style="{StaticResource MenuButton}" Content="new game" Click="NewGame_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="continue" Click="Continue_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="options" Click="Options_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="profile" Click="Profile_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="help" Click="Help_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="highscores" Click="Highscores_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="change profile" Click="ChangeProfile_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="exit" Click="Exit_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="neW gAme" Click="NewGame_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="ConTInue" Click="Continue_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="oPtioNS" Click="Options_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="proFiLe" Click="Profile_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="Help" Click="Help_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="HiGhscoREs" Click="Highscores_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="cHANge proFIle" Click="ChangeProfile_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="eXit" Click="Exit_Click"/>
             </StackPanel>
         </Grid>
     </ContentControl>

@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace RocknSpace.Menu
 {
-    public enum MenuType { Profiles, Main, Options, Controls, Help, Highscores, Profile, Pause};
+    public enum MenuType { Profiles, Main, Options, Controls, Help, Highscores, Profile, Pause, HUD};
 
     public static class MenuManager
     {

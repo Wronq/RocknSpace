@@ -11,7 +11,7 @@
         <Grid>
             <Label HorizontalAlignment="Center" Content="rock'N'space" Style="{StaticResource MenuTitle}" />
 
-            <Label Content="Profiles:" Style="{StaticResource MenuLabel}" HorizontalAlignment="Left" Margin="-181,142,0,0" VerticalAlignment="Top"/>
+            <Label Content="proFIleS:" Style="{StaticResource MenuLabel}" HorizontalAlignment="Left" Margin="-181,142,0,0" VerticalAlignment="Top"/>
             <ScrollViewer Style="{StaticResource MenuScrollViewer}" Margin="-148,190,120,20" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=List}">
                     <ItemsControl.ItemTemplate>
@@ -26,9 +26,9 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </ScrollViewer>
-            <TextBox x:Name="txtName" Style="{StaticResource MenuTextbox}" HorizontalAlignment="Left" Margin="292,371,-173,0" Text="TextBox" VerticalAlignment="Top" Width="279"/>
-            <Button HorizontalAlignment="Left" Style="{StaticResource MenuButton}" Content="add new" Click="AddNew_Click" Margin="313,415,-44,-415"/>
-            <Button HorizontalAlignment="Left" Style="{StaticResource MenuButton}" Content="exit game" Click="Exit_Click" Margin="387,600,-118,-600"/>
+            <TextBox x:Name="txtName" Style="{StaticResource MenuTextbox}" HorizontalAlignment="Left" Margin="381,371,-55,0" Text="name..." VerticalAlignment="Top" Width="279"/>
+            <Button HorizontalAlignment="Left" Style="{StaticResource MenuButton}" Content="add new" Click="AddNew_Click" Margin="402,415,-55,-415"/>
+            <Button HorizontalAlignment="Left" Style="{StaticResource MenuButton}" Content="Exit gAMe" Click="Exit_Click" Margin="387,600,-118,-600"/>
         </Grid>
     </ContentControl>
 </UserControl>

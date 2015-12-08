@@ -15,5 +15,9 @@
         <menu:OptionsScreen x:Name="ScreenOptions" Style="{StaticResource MenuScreen}" />
         <menu:HighscoresScreen x:Name="ScreenHighscores" Style="{StaticResource MenuScreen}" />
         <menu:ControlsScreen x:Name="ScreenControls" Style="{StaticResource MenuScreen}" />
+        <menu:HelpScreen x:Name="ScreenHelp" Style="{StaticResource MenuScreen}" />
+        <menu:ProfileScreen x:Name="ScreenProfile" Style="{StaticResource MenuScreen}" />
+        <menu:PauseScreen x:Name="ScreenPause" Style="{StaticResource MenuScreen}" />
+        <local:HUD x:Name="ScreenHUD" Style="{StaticResource MenuScreen}" Width="Auto" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

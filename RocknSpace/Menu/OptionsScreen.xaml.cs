@@ -38,6 +38,7 @@ namespace RocknSpace.Menu
         private void Fullscreen_Click(object sender, RoutedEventArgs e)
         {
             Profile.Current.Fullscreen = !Profile.Current.Fullscreen;
+            MainWindow.Instance.Fullscreen = Profile.Current.Fullscreen;
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)

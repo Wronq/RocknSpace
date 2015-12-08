@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using SharpDX;
 using RocknSpace.Utils;
+using RocknSpace.Collision;
 
 namespace RocknSpace
 {
@@ -55,15 +56,15 @@ namespace RocknSpace
                 if (pos.Y < -500) Velocity.Y = Math.Abs(Velocity.Y);
                 else if (pos.Y > height)
                     Velocity.Y = -Math.Abs(Velocity.Y);
-                /*
-                foreach (var Object in ObjectManager.GetProbableCollisions(particle.Position))
+                
+                /*foreach (var Object in EntityManager.bvhTree.CheckCollision(Position))
                 {
-                    Vector2 mtv = Collision.Check(Object, particle.Position);
+                    Vector2 mtv = CollisionData.Check(Object, Position);
 
                     if (mtv != Vector2.Zero)
                     {
                         mtv.Normalize();
-                        vel = vel + (2 * vel.Dot(-mtv)) * mtv;
+                        Velocity += (2 * Velocity.Dot(-mtv)) * mtv;
                     }
                 }*/
                 // denormalized floats cause significant performance issues

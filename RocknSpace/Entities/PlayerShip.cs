@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using SharpDX;
 using RocknSpace.Utils;
+using RocknSpace.Entities;
+using RocknSpace.Menu;
 
 namespace RocknSpace
 {
@@ -26,6 +28,7 @@ namespace RocknSpace
             base(new GameShape(new Vector2[] { new Vector2(0, -5) * 4, new Vector2(10, -10) * 4, new Vector2(25, 0) * 4, new Vector2(10, 10) * 4, new Vector2(0, 5) * 4 }))
         {
             Color = new Color4(1, 0, 0, 1);
+            this.Position = new Vector2(200, 200);
         }
 
         public override void Update()
@@ -34,20 +37,29 @@ namespace RocknSpace
 
             if (Keyboard.IsKeyDown(Key.W))
             {
-                Force += new Vector2((float)Math.Cos(-Orientation), (float)Math.Sin(-Orientation)) * 5000000.0f;
+                Force += new Vector2((float)Math.Cos(Orientation), (float)Math.Sin(Orientation)) * 5000000.0f;
                 MakeExhaustFire();
             }
             if (Keyboard.IsKeyDown(Key.A))
             {
-                Torque -= 50000000.0f;
+                Torque += 50000000.0f;
             }
             if (Keyboard.IsKeyDown(Key.D))
             {
-                Torque += 50000000.0f;
+                Torque -= 50000000.0f;
+            }
+            if (Keyboard.IsKeyDown(Key.Escape))
+            {
+                MenuManager.Clear();
+                MenuManager.Add(MenuType.Pause);
             }
             if (Keyboard.IsKeyDown(Key.Space))
             {
-                float hue1 = rand.NextFloat(0, 6);
+                this.Velocity = Vector2.Zero;
+                this.Omega = 0;
+                this.Orientation = 0;
+
+                /*float hue1 = rand.NextFloat(0, 6);
                 float hue2 = (hue1 + rand.NextFloat(0, 2)) % 6f;
                 Color4 color1 = ColorUtil.HSVToColor(hue1, 0.5f, 1);
                 Color4 color2 = ColorUtil.HSVToColor(hue2, 0.5f, 1);
@@ -57,8 +69,9 @@ namespace RocknSpace
                     float speed = 12.0f * (1.0f - 1 / rand.NextFloat(1, 10));
 
                     Color4 color = Color4.Lerp(color1, color2, rand.NextFloat(0, 1));
-                    ParticleManager.CreateParticle(PlayerShip.Instance.Position, color, 190, Vector2.One, rand.NextVector2(speed, speed), 0.3f);
-                }
+                    Vector2 dir = rand.NextVector2(1, 1);
+                    ParticleManager.CreateParticle(PlayerShip.Instance.Position + dir * 50, color, 190, Vector2.One, dir * speed, 0.2f);
+                }*/
             }
         }
 
@@ -72,13 +85,13 @@ namespace RocknSpace
 
                 double t = Time.TotalSeconds;
                 // The primary velocity of the particles is 3 pixels/frame in the direction opposite to which the ship is travelling.
-                Vector2 baseVel = new Vector2((float)Math.Cos(-Orientation), (float)Math.Sin(-Orientation)).Normal() * -3;
+                Vector2 baseVel = new Vector2((float)Math.Cos(Orientation), (float)Math.Sin(Orientation)).Normal() * -3;
                 // Calculate the sideways velocity for the two side streams. The direction is perpendicular to the ship's velocity and the
                 // magnitude varies sinusoidally.
                 Vector2 perpVel = new Vector2(baseVel.Y, -baseVel.X) * (0.6f * (float)Math.Sin(t * 10));
                 Color4 sideColor = new Color4(0.78f, 0.14f, 0.03f, 1);    // deep red
                 Color4 midColor = new Color4(1.0f, 0.73f, 0.11f, 1);   // orange-yellow
-                Vector2 pos = Position /*+ Vector.Transform(new Vector(-25, 0), rot)*/;   // position of the ship's exhaust pipe.
+                Vector2 pos = Position + new Vector2(-25, 0).Transform(Orientation, Vector2.Zero); // Vector.Transform(new Vector(-25, 0), rot)*/;   // position of the ship's exhaust pipe.
 
                 // middle particle stream
                 Vector2 velMid = baseVel + rand.NextVector2(0, 1);

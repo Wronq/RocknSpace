@@ -98,7 +98,7 @@ namespace RocknSpace.DirectWpf
         private void StartD3D()
         {
             this.Device = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport, FeatureLevel.Level_10_0);
-
+            
             this.D3DSurface = new DX10ImageSource();
             this.D3DSurface.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
@@ -195,6 +195,7 @@ namespace RocknSpace.DirectWpf
 
             width = Math.Max((int)base.ActualWidth, 100);
             height = Math.Max((int)base.ActualHeight, 100);
+            SampleDescription quality = new SampleDescription(1, 0);
 
             Texture2DDescription colordesc = new Texture2DDescription
             {
@@ -203,7 +204,7 @@ namespace RocknSpace.DirectWpf
                 Width = (int)width,
                 Height = (int)height,
                 MipLevels = 1,
-                SampleDescription = new SampleDescription(1, 0),
+                SampleDescription = quality,
                 Usage = ResourceUsage.Default,
                 OptionFlags = ResourceOptionFlags.Shared,
                 CpuAccessFlags = CpuAccessFlags.None,
@@ -217,7 +218,7 @@ namespace RocknSpace.DirectWpf
                 Width = (int)width,
                 Height = (int)height,
                 MipLevels = 1,
-                SampleDescription = new SampleDescription(1, 0),
+                SampleDescription = quality,
                 Usage = ResourceUsage.Default,
                 OptionFlags = ResourceOptionFlags.None,
                 CpuAccessFlags = CpuAccessFlags.None,
@@ -397,12 +398,17 @@ namespace RocknSpace.DirectWpf
             int targetWidth = renderTarget.Description.Width;
             int targetHeight = renderTarget.Description.Height;
 
-            device.OutputMerger.SetTargets(this.DepthStencilView, this.RenderTargetView);
+            if (Profile.Current == null ? true : Profile.Current.Blur)
+                device.OutputMerger.SetTargets(this.DepthStencilView, this.RenderTargetView);
+            else
+                device.OutputMerger.SetTargets(this.DepthStencilView, this.OutputRenderTargetView);
+
             device.OutputMerger.SetBlendState(this.BlendingState, new Color4(0, 0, 0, 0), 0xfffffff);
 
             device.Rasterizer.SetViewports(new Viewport(0, 0, targetWidth, targetHeight, 0.0f, 1.0f));
 
             device.ClearRenderTargetView(this.RenderTargetView, this.ClearColor);
+            device.ClearRenderTargetView(this.OutputRenderTargetView, this.ClearColor);
             device.ClearDepthStencilView(this.DepthStencilView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0);
 
             if (this.Scene != null)
@@ -420,6 +426,11 @@ namespace RocknSpace.DirectWpf
 
                 this.Scene.Update(this.RenderTimer.Elapsed);
                 this.Scene.Render();
+            }
+            if (Profile.Current == null ? false : !Profile.Current.Blur)
+            {
+                device.Flush();
+                return;
             }
 
             device.OutputMerger.SetTargets(this.DepthStencilView, this.RenderTarget1View);

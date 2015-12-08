@@ -27,8 +27,8 @@ PS_IN VS( VS_IN input )
 							0, 1, Position[1],
 							0, 0, 1};
 
-	float3x3 rotation = {cos(Position[2]), sin(Position[2]), 0,
-						 -sin(Position[2]), cos(Position[2]), 0,
+	float3x3 rotation = {cos(Position[2]), -sin(Position[2]), 0,
+						 sin(Position[2]), cos(Position[2]), 0,
 						 0, 0, 1};
 
 	float3x3 ModelViewProjection = mul(projection, mul(translation, rotation));

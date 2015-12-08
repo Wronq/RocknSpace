@@ -15,10 +15,11 @@ using RocknSpace.Utils;
 
 namespace RocknSpace
 {
-    class GameShape
+    public class GameShape
     {
         public Vector2[] Vertices;
         public Vector2[] Axes;
+        public float Radius;
 
         public DataStream data;
 
@@ -49,7 +50,7 @@ namespace RocknSpace
             return (float)Math.Abs(mass) / 2.0f * density;
         }
 
-        public float GetRadius()
+        private float GetRadius()
         {
             float radius = 0;
             foreach (Vector2 vertex in Vertices)
@@ -99,6 +100,8 @@ namespace RocknSpace
             data.Write(new Vector3(Vertices[0].X * (1 - width / len_), Vertices[0].Y * (1 - width / len_), 1));
 
             data.Position = 0;
+
+            Radius = GetRadius();
         }
     }
 }

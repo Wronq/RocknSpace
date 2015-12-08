@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 
-namespace RocknSpace
+namespace RocknSpace.Entities
 {
-    abstract class Entity
+    public abstract class Entity
     {
         protected static Random rand = new Random();
 

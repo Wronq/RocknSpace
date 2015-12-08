@@ -30,6 +30,8 @@ namespace RocknSpace
         private int counter = 0;
         private float sumFps = 0;
 
+        public bool isRunning = false;
+
         public GameRoot()
         {
             Rand = new Random();
@@ -90,6 +92,8 @@ namespace RocknSpace
 
         public void Update(TimeSpan timeSpan)
         {
+            if (!isRunning) return;
+
             TimeSpan ts = (DateTime.Now - Last);
             Time.Dt = (float)ts.TotalSeconds;
 
@@ -109,7 +113,10 @@ namespace RocknSpace
                     ParticleManager.CreateParticle(new Vector2(350, 250), new Color4(0, 1, 0, 0.3f), 190, Vector2.One, Rand.NextVector2(speed, speed), 0.3f);
                 }
                 //EntityManager.Entities.Last().isExpired = true;
-                EntityManager.Add(Rock.Create(new Vector2(0, 0), 500000));
+                Rock r = Rock.Create(new Vector2(Rand.Next(-500, 500), Rand.Next(-500, 500)), Rand.Next(100000, 500000));
+                r.Velocity = Rand.NextVector2(100, 50);
+                r.Omega = Rand.NextFloat(-3, 3);
+                //EntityManager.Add(r);
             }
 
             EntityManager.Update();
@@ -144,6 +151,8 @@ namespace RocknSpace
 
         public void Render()
         {
+            if (!isRunning) return;
+
             Device device = this.Host.Device;
             if (device == null)
                 return;
