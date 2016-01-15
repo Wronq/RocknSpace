@@ -45,13 +45,10 @@ namespace RocknSpace.Menu
             List<Key> keys = new List<Key>();
             if (forbiddenKeys.Contains(key)) return false;
 
-            if (state != "Up") keys.Add(Profile.Current.KeyUp);
-            if (state != "Left") keys.Add(Profile.Current.KeyLeft);
-            if (state != "Right") keys.Add(Profile.Current.KeyRight);
-            if (state != "Shoot") keys.Add(Profile.Current.KeyShoot);
-            if (state != "Rocket") keys.Add(Profile.Current.KeyRocket);
-            if (state != "Mine") keys.Add(Profile.Current.KeyMine);
-            if (state != "Shield") keys.Add(Profile.Current.KeyShield);
+            if (state != "Up") keys.Add(Profiles.Current.KeyUp);
+            if (state != "Left") keys.Add(Profiles.Current.KeyLeft);
+            if (state != "Right") keys.Add(Profiles.Current.KeyRight);
+            if (state != "Stop") keys.Add(Profiles.Current.KeyStop);
 
             return !keys.Contains(key);
         }
@@ -69,13 +66,10 @@ namespace RocknSpace.Menu
 
             switch (state)
             {
-                case "Up": Profile.Current.KeyUp = e.Key; break;
-                case "Left": Profile.Current.KeyLeft = e.Key; break;
-                case "Right": Profile.Current.KeyRight = e.Key; break;
-                case "Shoot": Profile.Current.KeyShoot = e.Key; break;
-                case "Rocket": Profile.Current.KeyRocket = e.Key; break;
-                case "Mine": Profile.Current.KeyMine = e.Key; break;
-                case "Shield": Profile.Current.KeyShield = e.Key; break;
+                case "Up": Profiles.Current.KeyUp = e.Key; break;
+                case "Left": Profiles.Current.KeyLeft = e.Key; break;
+                case "Right": Profiles.Current.KeyRight = e.Key; break;
+                case "Stop": Profiles.Current.KeyStop = e.Key; break;
             }
 
             state = null;

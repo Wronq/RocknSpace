@@ -60,6 +60,7 @@ namespace RocknSpace.DirectWpf
         private Effect BloomEffect;
         private InputLayout VertexLayout;
         private Buffer QuadBuffer;
+        private Buffer HalfQuadBuffer;
 
         public Color4 ClearColor = SharpDX.Color.Black;
 
@@ -140,6 +141,29 @@ namespace RocknSpace.DirectWpf
                 SizeInBytes = 4 * 6 * 4,
                 Usage = ResourceUsage.Default
             });
+
+            vertices = new DataStream(4 * 6 * 4, true, true);
+            vertices.Write(new Vector4(-1.0f, 1.0f, 0.0f, 1.0f));
+            vertices.Write(new Vector2(0.0f, 0.0f));
+
+            vertices.Write(new Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+            vertices.Write(new Vector2(2.0f, 0.0f));
+
+            vertices.Write(new Vector4(-1.0f, -1.0f, 0.0f, 1.0f));
+            vertices.Write(new Vector2(0.0f, 2.0f));
+
+            vertices.Write(new Vector4(1.0f, -1.0f, 0.0f, 1.0f));
+            vertices.Write(new Vector2(2.0f, 2.0f));
+            vertices.Position = 0;
+
+            this.HalfQuadBuffer = new Buffer(Device, vertices, new BufferDescription()
+            {
+                BindFlags = BindFlags.VertexBuffer,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = ResourceOptionFlags.None,
+                SizeInBytes = 4 * 6 * 4,
+                Usage = ResourceUsage.Default
+            });
         }
 
         private void EndD3D()
@@ -171,6 +195,7 @@ namespace RocknSpace.DirectWpf
             Disposer.RemoveAndDispose(ref this.BloomEffect);
             Disposer.RemoveAndDispose(ref this.VertexLayout);
             Disposer.RemoveAndDispose(ref this.QuadBuffer);
+            Disposer.RemoveAndDispose(ref this.HalfQuadBuffer);
             Disposer.RemoveAndDispose(ref this.Device);
         }
 
@@ -236,8 +261,8 @@ namespace RocknSpace.DirectWpf
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
                 CpuAccessFlags = CpuAccessFlags.None,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = (int)width,
-                Height = (int)height,
+                Width = (int)width / 2,
+                Height = (int)height / 2,
                 MipLevels = 1,
                 OptionFlags = ResourceOptionFlags.Shared,
                 SampleDescription = new SampleDescription(1, 0),
@@ -250,8 +275,8 @@ namespace RocknSpace.DirectWpf
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
                 CpuAccessFlags = CpuAccessFlags.None,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = (int)width,
-                Height = (int)height,
+                Width = (int)width / 2,
+                Height = (int)height / 2,
                 MipLevels = 1,
                 OptionFlags = ResourceOptionFlags.Shared,
                 SampleDescription = new SampleDescription(1, 0),
@@ -385,6 +410,12 @@ namespace RocknSpace.DirectWpf
             BloomEffect.GetVariableByName("SampleOffsets").AsVector().Set(sampleOffsets);
             BloomEffect.GetVariableByName("SampleWeights").AsScalar().Set(sampleWeights);
         }
+
+        void RenderPart(RenderTargetView Target)
+        {
+
+        }
+
         void Render(TimeSpan sceneTime)
         {
             SharpDX.Direct3D10.Device device = this.Device;
@@ -398,7 +429,7 @@ namespace RocknSpace.DirectWpf
             int targetWidth = renderTarget.Description.Width;
             int targetHeight = renderTarget.Description.Height;
 
-            if (Profile.Current == null ? true : Profile.Current.Blur)
+            if (Profiles.Current == null ? true : Profiles.Current.Blur)
                 device.OutputMerger.SetTargets(this.DepthStencilView, this.RenderTargetView);
             else
                 device.OutputMerger.SetTargets(this.DepthStencilView, this.OutputRenderTargetView);
@@ -427,7 +458,7 @@ namespace RocknSpace.DirectWpf
                 this.Scene.Update(this.RenderTimer.Elapsed);
                 this.Scene.Render();
             }
-            if (Profile.Current == null ? false : !Profile.Current.Blur)
+            if (Profiles.Current == null ? false : !Profiles.Current.Blur)
             {
                 device.Flush();
                 return;
@@ -440,7 +471,7 @@ namespace RocknSpace.DirectWpf
 
             device.InputAssembler.InputLayout = this.VertexLayout;
             device.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleStrip;
-            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.QuadBuffer, 24, 0));
+            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.HalfQuadBuffer, 24, 0));
 
             BloomEffect.GetVariableByName("Texture1").AsShaderResource().SetResource(ShaderTargetView);
             BloomEffect.GetVariableByName("BloomThreshold").AsScalar().Set(Settings.BloomThreshold);
@@ -456,7 +487,7 @@ namespace RocknSpace.DirectWpf
             device.ClearRenderTargetView(this.RenderTarget2View, SharpDX.Color.Black);
 
             BloomEffect.GetVariableByName("Texture1").AsShaderResource().SetResource(ShaderTarget1View);
-            SetBlurEffectParameters(1.0f / RenderTarget1.Description.Width, 0);
+            SetBlurEffectParameters(1.0f / RenderTarget1.Description.Width / 3, 0);
 
             BloomEffect.GetTechniqueByIndex(0).GetPassByIndex(1).Apply();
             device.Draw(4, 0);
@@ -469,11 +500,10 @@ namespace RocknSpace.DirectWpf
             device.ClearRenderTargetView(this.RenderTarget1View, SharpDX.Color.Black);
 
             BloomEffect.GetVariableByName("Texture1").AsShaderResource().SetResource(ShaderTarget2View);
-            SetBlurEffectParameters(0, 1.0f / RenderTarget1.Description.Height);
+            SetBlurEffectParameters(0, 1.0f / RenderTarget2.Description.Height / 3);
 
             BloomEffect.GetTechniqueByIndex(0).GetPassByIndex(1).Apply();
             device.Draw(4, 0);
-
 
 
 
@@ -481,6 +511,8 @@ namespace RocknSpace.DirectWpf
 
             device.ClearDepthStencilView(this.DepthStencilView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0);
             device.ClearRenderTargetView(this.OutputRenderTargetView, SharpDX.Color.Black);
+
+            device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(this.QuadBuffer, 24, 0));
 
             BloomEffect.GetVariableByName("BaseTexture").AsShaderResource().SetResource(ShaderTargetView);
             BloomEffect.GetVariableByName("BloomTexture").AsShaderResource().SetResource(ShaderTarget1View);

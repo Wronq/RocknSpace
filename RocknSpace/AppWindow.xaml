@@ -7,7 +7,7 @@
         xmlns:menu="clr-namespace:RocknSpace.Menu"
         xmlns:dpf="clr-namespace:RocknSpace.DirectWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="850" Width="1200">
+        Title="Rock'n'Space" Height="850" Width="1200" MinHeight="100" MinWidth="100" Icon="Images/icon.png">
     <Grid Background="Black">
         <dpf:DPFCanvas x:Name="Canvas1" Stretch="Fill"/>
         <menu:ProfilesScreen x:Name="ScreenProfiles" Style="{StaticResource MenuScreen}" />
@@ -15,9 +15,9 @@
         <menu:OptionsScreen x:Name="ScreenOptions" Style="{StaticResource MenuScreen}" />
         <menu:HighscoresScreen x:Name="ScreenHighscores" Style="{StaticResource MenuScreen}" />
         <menu:ControlsScreen x:Name="ScreenControls" Style="{StaticResource MenuScreen}" />
-        <menu:HelpScreen x:Name="ScreenHelp" Style="{StaticResource MenuScreen}" />
-        <menu:ProfileScreen x:Name="ScreenProfile" Style="{StaticResource MenuScreen}" />
+        <menu:HelpScreen x:Name="ScreenHelp" Style="{StaticResource MenuScreen}" Width="Auto" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" />
         <menu:PauseScreen x:Name="ScreenPause" Style="{StaticResource MenuScreen}" />
+        <menu:GameOverScreen x:Name="ScreenGameOver" Style="{StaticResource MenuScreen}" />
         <local:HUD x:Name="ScreenHUD" Style="{StaticResource MenuScreen}" Width="Auto" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

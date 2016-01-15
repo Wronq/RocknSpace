@@ -10,31 +10,8 @@ using System.Xml.Serialization;
 
 namespace RocknSpace
 {
-    public class HighscoresDummy : INotifyPropertyChanged
-    {
-        public ObservableCollection<Highscores.Entry> Entries { get; set; }
-
-        public static HighscoresDummy Instance { get; private set; }
-
-        static HighscoresDummy()
-        {
-            Instance = new HighscoresDummy();
-            Instance.Entries = Highscores.Entries;
-        }
-
-        private HighscoresDummy() { }
-        public void EntriesChanged()
-        {
-            Entries = Highscores.Entries;
-
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs("Entries"));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-    }
-
-    public class Highscores
+    [Serializable]
+    public class Highscores : INotifyPropertyChanged
     {
         [Serializable]
         public class Entry : INotifyPropertyChanged
@@ -71,35 +48,68 @@ namespace RocknSpace
             }
         }
 
-        public static ObservableCollection<Entry> Entries;
+        [XmlIgnore]
+        private int lastScore = 0;
+
+        public ObservableCollection<Entry> entries { get; private set; }
         
-        static Highscores()
+        public int LastScore
         {
-            Entries = new ObservableCollection<Entry>();
-            Load();
+            get { return lastScore; }
+            set { lastScore = value; propertyChanged("LastScore"); }
         }
 
-        public static void Load()
+        public static ObservableCollection<Entry> Entries { get { return Instance.entries; } }
+        public static Highscores Instance;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        static Highscores()
         {
-            if (!File.Exists(Settings.ProfilesPath)) return;
+            Instance = new Highscores();
+        }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Entry>));
-            TextReader reader = new StreamReader(Settings.HighscoresPath);
-            Entries = (ObservableCollection<Entry>)serializer.Deserialize(reader);
-            reader.Close();
-
-            HighscoresDummy.Instance.EntriesChanged();
+        public Highscores()
+        {
+            entries = new ObservableCollection<Entry>();
+            Load();
+        }
+ 
+        public static void Add()
+        {
+            Add(Profiles.Current.Name, Profiles.Current.State.Score);
         }
 
         public static void Add(int Score)
         {
-            Add(Profile.Current.Name, Score);
+            Add(Profiles.Current.Name, Score);
         }
 
         public static void Add(string Name, int Score)
         {
-            Entries.Add(new Entry(Name, Score));
-            HighscoresDummy.Instance.EntriesChanged();
+            Instance.LastScore = Score;
+
+            int i = 0;
+            for (; i < Entries.Count; i++)
+                if (Entries[i].Score < Score)
+                    break;
+
+            Entries.Insert(i, new Entry(Name, Score));
+
+            while (Entries.Count > 9)
+                Entries.Remove(Entries.FirstOrDefault(e1 => e1.Score == Entries.Min(e2 => e2.Score)));
+        }
+
+        private void Load()
+        {
+            if (!File.Exists(Settings.HighscoresPath)) return;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Entry>));
+            TextReader reader = new StreamReader(Settings.HighscoresPath);
+            entries = (ObservableCollection<Entry>)serializer.Deserialize(reader);
+            reader.Close();
+
+            propertyChanged("entries");
         }
 
         public static void Save()
@@ -108,6 +118,12 @@ namespace RocknSpace
             TextWriter writer = new StreamWriter(Settings.HighscoresPath);
             serializer.Serialize(writer, Entries);
             writer.Close();
+        }
+
+        private void propertyChanged(string Name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(Name));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿float4 Color;
 float3 Position;
 float2 Projection;
+float2 Camera;
 
 struct VS_IN
 {
@@ -19,8 +20,8 @@ PS_IN VS( VS_IN input )
 	
 	float3 pos3 = float3(input.pos[0], input.pos[1], 1);
 
-	float3x3 projection = { 1 / Projection[0], 0, 0,
-						   0, 1 / Projection[1], 0,
+	float3x3 projection = { 1 / Projection[0], 0, Camera[0] / Projection[0],
+						   0, 1 / Projection[1], Camera[1] / Projection[1],
 						   0, 0, 1 };
 
 	float3x3 translation = {1, 0, Position[0],

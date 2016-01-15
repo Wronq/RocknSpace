@@ -9,18 +9,54 @@ using RocknSpace.Entities;
 
 namespace RocknSpace.Entities
 {
-    class Rock : PhysicsEntity
+    public class Rock : PhysicsEntity
     {
-        public float HP;
+        public Rock() { }
+
         public Rock(GameShape Shape)
             : base(Shape)
         {
             Color = new Color4(1, 1, 1, 1);
         }
 
-        public static Rock Create(Vector2 Position, float Mass)
+        public static Rock Create(float maxSize = 280.0f)
         {
-            int numVertices = rand.Next(4, 8);
+            bool isCollision = false;
+            float radius = rand.NextFloat(60, maxSize);
+            Vector2 position = Vector2.Zero;
+
+            do
+            {
+                isCollision = false;
+                switch (rand.Next(3))
+                {
+                    case 0: position = new Vector2(rand.NextFloat(-GameRoot.Width, GameRoot.Width), GameRoot.Height + PlayerShip.Instance.Position.Y + radius * 4); break;
+                    case 1: position = new Vector2(GameRoot.Width + radius * 4, rand.NextFloat(0, GameRoot.Height) + PlayerShip.Instance.Position.Y); break;
+                    case 2: position = new Vector2(-GameRoot.Width - radius * 4, rand.NextFloat(0, GameRoot.Height) + PlayerShip.Instance.Position.Y); break;
+                }
+
+                foreach (Entity e in EntityManager.Entities)
+                {
+                    if ((e.Position - position).LengthSquared() < (e.Shape.Radius + radius) * (e.Shape.Radius + radius))
+                    {
+                        isCollision = true;
+                        break;
+                    }
+                }
+            }
+            while (isCollision);
+
+            Rock rock = Create(position, radius);
+
+            rock.Velocity = (PlayerShip.Instance.Position - position + rand.NextVector2(400, 0)).Normal() * rand.NextFloat(60, 190);
+            rock.Omega = rand.NextFloat(-5, 5);
+
+            return rock;
+        }
+
+        public static Rock Create(Vector2 Position, float radius)
+        {
+            int numVertices = rand.Next(5, 8);
             float angleSpace = (float)Math.PI * 2 / numVertices;
             Vector2[] points = new Vector2[numVertices];
 
@@ -28,40 +64,35 @@ namespace RocknSpace.Entities
             {
                 float angle = i * angleSpace;
                 angle = rand.NextFloat(angle - angleSpace / 2 * 0.9f, angle + angleSpace / 2 * 0.9f);
-                float dist = (float)(Math.Sqrt(Mass) / Math.PI);
 
-                points[i] = new Vector2(dist * (float)Math.Cos(angle), dist * (float)Math.Sin(angle));
+                points[i] = new Vector2(radius * (float)Math.Cos(angle), radius * (float)Math.Sin(angle));
             }
 
             //points = new Vector2[] { new Vector2(-100, -100), new Vector2(100, -100), new Vector2(100, 100), new Vector2(-100, 100) };
             
             Rock r = new Rock(new GameShape(points));
+            r.Position = Position;
 
             return r;
         }
 
         public override void Update()
         {
-            if (this.Position.X < -1000 || this.Position.X > 1000 || this.Position.Y < -1000 || this.Position.Y > 1000)
-            {
-               // isExpired = true;
-            }
-            if (HP < 0)
-            {
-                this.isExpired = true;
+            if (Math.Abs(Position.X) > GameRoot.Width + Shape.Radius * 4 + 100|| Math.Abs(this.Position.Y - PlayerShip.Instance.Position.Y) > GameRoot.Height + Shape.Radius * 4 + 100)
+               isExpired = true;
 
-                if (this.Mass > 10000.0f)
+            float dist = Position.Y - Profiles.Current.State.LinesPosition;
+            if (dist < 300.0f)
+            {
+                if (dist < -300.0f)
+                    isExpired = true;
+                else
                 {
-                    int newPieces = rand.Next(2, 5);
-                    float newMass = this.Mass / newPieces * 0.9f;
+                    dist = (dist + 300.0f) / 600.0f;
 
-                    for (int i = 0; i < newPieces; i++)
-                        EntityManager.Add(Rock.Create(this.Position, newMass));
+                    Color.Green = Color.Blue = dist;
                 }
-
-                return;
             }
-
             base.Update();
         }
     }

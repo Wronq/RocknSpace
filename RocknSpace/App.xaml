@@ -47,6 +47,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                            <MediaElement Name="audio" Volume="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.Sound}" />
                             <Label x:Name="Text" Content="{TemplateBinding Content}" Style="{StaticResource MenuLabel}" FontSize="{TemplateBinding FontSize}" />
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -56,6 +57,18 @@
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter Property="Foreground" TargetName="Text" Value="Aquamarine" />
                             </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" TargetName="Text" Value="DarkGray" />
+                            </Trigger>
+                            <EventTrigger RoutedEvent="PreviewMouseDown">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <MediaTimeline Source="Sounds/click.wav" Storyboard.TargetName="audio" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -267,8 +280,8 @@
             <Setter Property="Focusable" Value="False"/>
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="SmallChange" Value="1"/>
-            <Setter Property="LargeChange" Value="10" />
+            <Setter Property="SmallChange" Value="0.01"/>
+            <Setter Property="LargeChange" Value="0.1" />
             <Style.Triggers>
                 <Trigger Property="Orientation" Value="Horizontal">
                     <Setter Property="MinHeight" Value="21" />

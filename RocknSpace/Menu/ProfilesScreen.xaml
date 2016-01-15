@@ -13,7 +13,7 @@
 
             <Label Content="proFIleS:" Style="{StaticResource MenuLabel}" HorizontalAlignment="Left" Margin="-181,142,0,0" VerticalAlignment="Top"/>
             <ScrollViewer Style="{StaticResource MenuScrollViewer}" Margin="-148,190,120,20" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=List}">
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Source={x:Static local:Profiles.Instance}, Path=List}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button HorizontalAlignment="Left" Style="{StaticResource MenuButton}" Content="{Binding Name}" Click="Profile_Click"/>

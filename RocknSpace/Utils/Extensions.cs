@@ -17,7 +17,7 @@ namespace RocknSpace.Utils
         public static Vector2 NextVector2(this Random rand, float maxLength = 1.0f, float minLength = 1.0f)
         {
             double theta = rand.NextDouble() * 2 * Math.PI;
-            float length = rand.NextFloat(maxLength, minLength);
+            float length = rand.NextFloat(minLength, maxLength);
             
             return new Vector2(length * (float)Math.Cos(theta), length * (float)Math.Sin(theta));
         }

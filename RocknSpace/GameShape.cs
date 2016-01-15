@@ -12,16 +12,41 @@ using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D10.Buffer;
 using Device = SharpDX.Direct3D10.Device;
 using RocknSpace.Utils;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace RocknSpace
 {
-    public class GameShape
+    public class GameShape : IDisposable, IOnDeserialized
     {
         public Vector2[] Vertices;
-        public Vector2[] Axes;
         public float Radius;
+        
+        [XmlIgnore]
+        public VertexBufferBinding Buffer;
+        [XmlIgnore]
+        private Buffer buf;
 
-        public DataStream data;
+        public GameShape()
+        {
+
+        }
+
+        public GameShape(Vector2[] Vertices)
+        {
+            this.Vertices = Vertices;
+
+            Vector2 Center = Vector2.Zero;
+
+            foreach (Vector2 vertex in Vertices)
+                Center += vertex;
+            Center /= Vertices.Count();
+
+            for (int i = 0; i < Vertices.Length; i++)
+                Vertices[i] -= Center;
+
+            CreateBuffers();
+        }
 
         public float GetInertia(float density = 1.0f)
         {
@@ -29,10 +54,10 @@ namespace RocknSpace
             for (int i = 0; i < Vertices.Length; i++)
             {
                 int k = i == Vertices.Length - 1 ? 0 : i + 1;
-                
+
                 inertia += density / 12.0f * Math.Abs(Vertices[k].Cross(Vertices[i])) * (Vertices[i].LengthSquared() + Vertices[i].Dot(Vertices[k]) + Vertices[k].LengthSquared());
             }
-            
+
             return inertia;
         }
 
@@ -59,32 +84,14 @@ namespace RocknSpace
 
             return (float)Math.Sqrt(radius);
         }
-
-        public GameShape(Vector2[] Vertices)
+        
+        private void CreateBuffers()
         {
-            this.Vertices = Vertices;
-
-            Vector2 Center = Vector2.Zero;
-
-            foreach (Vector2 vertex in Vertices)
-                Center += vertex;
-            Center /= Vertices.Count();
-
-            for (int i = 0; i < Vertices.Length; i++)
-                Vertices[i] -= Center;
-
-            Axes = new Vector2[Vertices.Length];
-
-            for (int i = 0; i < Vertices.Length; i++)
-            {
-                int k = i == Vertices.Length - 1 ? 0 : i + 1;
-
-                Axes[i] = (Vertices[k] - Vertices[i]).Perpendicular();
-            }
+            if (!GameRoot.Initialized) return;
 
             float width = 4.0f;
 
-            data = new DataStream(Vertices.Length * 2 * 24 + 48, true, true);
+            DataStream data = new DataStream((Vertices.Length + 1) * 2 * 12, true, true);
             for (int i = 0; i < Vertices.Length; i++)
             {
                 Vector3 a = new Vector3(Vertices[i].X, Vertices[i].Y, 1);
@@ -102,6 +109,27 @@ namespace RocknSpace
             data.Position = 0;
 
             Radius = GetRadius();
+
+            buf = new Buffer(GameRoot.Device, data, new BufferDescription()
+            {
+                BindFlags = BindFlags.VertexBuffer,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = ResourceOptionFlags.None,
+                SizeInBytes = (Vertices.Length + 1) * 2 * 12,
+                Usage = ResourceUsage.Default
+            });
+
+            Buffer = new VertexBufferBinding(buf, 12, 0);
+        }
+
+        public void Dispose()
+        {
+            Disposer.RemoveAndDispose(ref buf);
+        }
+
+        public void OnDeserialized()
+        {
+            CreateBuffers();
         }
     }
 }

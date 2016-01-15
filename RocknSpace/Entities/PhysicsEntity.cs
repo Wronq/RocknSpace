@@ -8,19 +8,21 @@ using System.Windows.Media;
 using RocknSpace.Utils;
 using SharpDX;
 using RocknSpace.Collision;
+using System.Xml.Serialization;
 
 namespace RocknSpace.Entities
 {
     public class PhysicsEntity : Entity
     {
-        protected float Mass;
-        protected float MassInv;
-        protected float Inertia;
-        protected float InertiaInv;
+        public float Mass;
+        public float MassInv;
+        public float Inertia;
+        public float InertiaInv;
 
         public Vector2 Velocity;
+        [XmlIgnore]
         protected Vector2 Force;
-
+        [XmlIgnore]
         protected float Torque;
         public float Omega;
 
@@ -58,30 +60,9 @@ namespace RocknSpace.Entities
 
         public void Collision(CollisionData Data)
         {
-            if (Data.N == Vector2.Zero)
-                return;
-
-            PhysicsEntity p2 = (PhysicsEntity)Data.Object2;
-
-            float e = 0.8f; //Restitution
-
-            Vector2 rAP = (Data.Point1 - Position).Perpendicular();
-            Vector2 rBP = (Data.Point1 - p2.Position).Perpendicular();
-
-            Vector2 vAP = Velocity + Omega * rAP;
-            Vector2 vBP = p2.Velocity + p2.Omega * rBP;
-
-            Vector2 vAB = vAP - vBP;
-
-            float j = -(1 + e) * vAB.Dot(Data.N);
-            float j1 = Data.N.Dot(Data.N * (MassInv + p2.MassInv));
-            float j2 = (float)Math.Pow(rAP.Dot(Data.N), 2) * InertiaInv;
-            float j3 = (float)(Math.Pow(rBP.Dot(Data.N), 2) * p2.InertiaInv);
-            //j /= Data.N.Dot(Data.N) * (MassInv + p2.MassInv) + (float)Math.Pow(rAP.Dot(Data.N), 2) * InertiaInv + (float)(Math.Pow(rBP.Dot(Data.N), 2) * p2.InertiaInv);
-            j /= j1 + j2 + j3;
-
-            this.Velocity = this.Velocity + j * MassInv * Data.N;
-            this.Omega = this.Omega + rAP.Dot(j * Data.N) * InertiaInv;
+            Velocity = Velocity + Data.J * MassInv * Data.N;
+            Omega = Omega + Data.rAP.Dot(Data.J * Data.N) * InertiaInv;
+            Position -= Data.N * Data.Depth / 2;
         }
 
         public override void PostUpdate()
@@ -90,15 +71,9 @@ namespace RocknSpace.Entities
             Velocity += acceleration * 0.5f * Time.Dt;
 
             Torque += Omega;
-            Omega += Torque * InertiaInv * Time.Dt;
+            Omega += Torque * Time.Dt * InertiaInv;
             Omega *= 0.9999f;
             Orientation += Omega * Time.Dt;
-
-            /*((RotateTransform)translateMatrix.Children[0]).Angle = Orientation;
-            ((TranslateTransform)translateMatrix.Children[1]).X = Position.X;
-            ((TranslateTransform)translateMatrix.Children[1]).Y = Position.Y;
-
-            Shape.RenderTransform = translateMatrix;*/
         }
     }
 }

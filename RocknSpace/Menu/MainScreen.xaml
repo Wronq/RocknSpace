@@ -3,17 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RocknSpace.Menu"
+             xmlns:local="clr-namespace:RocknSpace"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <local:NullToBoolConverter x:Key="NullToBoolConverter" />
+    </UserControl.Resources>
     <ContentControl Style="{StaticResource MenuBackground}">
         <Grid>
             <Label HorizontalAlignment="Center" Content="rock'N'space" Style="{StaticResource MenuTitle}" />
             <StackPanel Margin="0,212,0,0">
                 <Button Style="{StaticResource MenuButton}" Content="neW gAme" Click="NewGame_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="ConTInue" Click="Continue_Click"/>
+                <Button Style="{StaticResource MenuButton}" Content="ConTInue" Click="Continue_Click" IsEnabled="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.State, Converter={StaticResource NullToBoolConverter}}"/>
                 <Button Style="{StaticResource MenuButton}" Content="oPtioNS" Click="Options_Click"/>
-                <Button Style="{StaticResource MenuButton}" Content="proFiLe" Click="Profile_Click"/>
                 <Button Style="{StaticResource MenuButton}" Content="Help" Click="Help_Click"/>
                 <Button Style="{StaticResource MenuButton}" Content="HiGhscoREs" Click="Highscores_Click"/>
                 <Button Style="{StaticResource MenuButton}" Content="cHANge proFIle" Click="ChangeProfile_Click"/>

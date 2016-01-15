@@ -62,8 +62,6 @@ float4 GaussianBlur(PS_IN input) : SV_TARGET
     return c;
 }
 
-
-
 //-----------------------------------------
 
 // Helper for modifying the saturation of a color.

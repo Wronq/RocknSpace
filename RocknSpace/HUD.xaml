@@ -9,29 +9,17 @@
     <Grid>
         <ContentControl Style="{StaticResource MenuBackground}" Width="300" Height="300" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-10, -244, 0, 0">
             <Grid>
-                
+                <Label Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.State.Score, Mode=OneWay}" Style="{StaticResource MenuLabel}" Foreground="White" Margin="0,252,-91,-252" FontSize="21.333" HorizontalAlignment="Right"/>
             </Grid>
         </ContentControl>
-        <ContentControl Style="{StaticResource MenuBackground}" Width="300" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0, -244, -10, 0">
+        <!--<ContentControl Style="{StaticResource MenuBackground}" Width="300" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0, -244, -10, 0">
             <ContentControl.LayoutTransform>
                 <RotateTransform CenterX="0.5" CenterY="0.5" Angle="90"/>
             </ContentControl.LayoutTransform>
             <Grid>
 
             </Grid>
-        </ContentControl>
-        <ContentControl Style="{StaticResource MenuBackground}" Width="300" Height="300" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-10, 0, 0, -244">
-            <ContentControl.LayoutTransform>
-                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="90"/>
-            </ContentControl.LayoutTransform>
-            <Grid>
-
-            </Grid>
-        </ContentControl>
-        <ContentControl Style="{StaticResource MenuBackground}" Width="300" Height="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, -10, -244">
-            <Grid>
-
-            </Grid>
-        </ContentControl>
+        </ContentControl>-->
+  
     </Grid>
 </UserControl>

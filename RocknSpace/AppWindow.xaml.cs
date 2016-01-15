@@ -54,49 +54,40 @@ namespace RocknSpace
         {
             InitializeComponent();
             Instance = this;
-            
-            Root = new GameRoot();
+
+            Root = GameRoot.Instance;
             this.Canvas1.Scene = Root;
 
             Application.Current.Exit += Current_Exit;
-            MenuManager.CurrentChanged += MenuManager_CurrentChanged;
+            //MenuManager.CurrentChanged += MenuManager_CurrentChanged;
 
-            MenuManager.AddInstance(MenuType.Profiles, ScreenProfiles);
-            MenuManager.AddInstance(MenuType.Main, ScreenMain);
-            MenuManager.AddInstance(MenuType.Controls, ScreenControls);
-            MenuManager.AddInstance(MenuType.Highscores, ScreenHighscores);
-            MenuManager.AddInstance(MenuType.Options, ScreenOptions);
-            MenuManager.AddInstance(MenuType.Help, ScreenHelp);
-            MenuManager.AddInstance(MenuType.Profile, ScreenProfile);
-            MenuManager.AddInstance(MenuType.HUD, ScreenHUD);
-            MenuManager.AddInstance(MenuType.Pause, ScreenPause);
+            MenuManager.Register(MenuType.Profiles, ScreenProfiles);
+            MenuManager.Register(MenuType.Main, ScreenMain);
+            MenuManager.Register(MenuType.Controls, ScreenControls);
+            MenuManager.Register(MenuType.Highscores, ScreenHighscores);
+            MenuManager.Register(MenuType.Options, ScreenOptions);
+            MenuManager.Register(MenuType.Help, ScreenHelp);
+            MenuManager.Register(MenuType.HUD, ScreenHUD);
+            MenuManager.Register(MenuType.Pause, ScreenPause);
+            MenuManager.Register(MenuType.GameOver, ScreenGameOver);
 
             MenuManager.Add(MenuType.Profiles);
 
-            ProfilesDummy.Instance.CurrentChanged += Instance_CurrentChanged;
+            Profiles.CurrentChanged += Instance_CurrentChanged;
+
+            Sounds.Music.Play();
         }
 
         private void Instance_CurrentChanged(object sender, EventArgs e)
         {
-            Fullscreen = Profile.Current.Fullscreen;
-        }
-
-        private void MenuManager_CurrentChanged(object sender, EventArgs e)
-        {
-            UserControl current = sender as UserControl;
-
-            if (current == null)
-            {
-                MenuManager.Add(MenuType.HUD);
-                Root.isRunning = true;
-            }
-            else
-                Root.isRunning = false;
+            Fullscreen = Profiles.Current.Fullscreen;
         }
 
         private void Current_Exit(object sender, ExitEventArgs e)
         {
-            Profile.Save();
+            Sounds.Music.Stop();
+            Profiles.Save();
+            Highscores.Save();
         }
     }
 }

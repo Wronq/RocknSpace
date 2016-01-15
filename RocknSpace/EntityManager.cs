@@ -15,7 +15,7 @@ namespace RocknSpace
     {
         public static List<Entity> Entities = new List<Entity>();
         private static List<Entity> addedEntities = new List<Entity>();
-        public static BVHTree<CircleShape> bvhTree = new BVHTree<CircleShape>();
+        //public static BVHTree<CircleShape> bvhTree = new BVHTree<CircleShape>();
 
         static bool isUpdating = false;
         public static int Count { get { return Entities.Count; } }
@@ -35,8 +35,8 @@ namespace RocknSpace
             foreach (Entity entity in Entities)
                 entity.PreUpdate();
 
-            bvhTree.Recalculate();
-            IEnumerable<CollisionData> Collisions = bvhTree.GetProbableCollisions();
+            //bvhTree.Recalculate();
+            IEnumerable<CollisionData> Collisions = GetProbableCollisions();
 
             foreach (CollisionData data in Collisions)
             {
@@ -45,22 +45,26 @@ namespace RocknSpace
                 {
                     Random rand = new Random();
                     data.CalculateN();
+                    data.CalculateJ();
 
                     ((PhysicsEntity)data.Object1).Collision(data);
                     data.Swap();
                     ((PhysicsEntity)data.Object1).Collision(data);
-                    
-                    for (int i = 0; i < 5; i++)
-                    {
-                        float speed = 1.0f * (1.0f - 1 / rand.NextFloat(1, 3));
 
-                        ParticleManager.CreateParticle(data.Point1, new Color4(1, 1, 1, 1), 190, Vector2.One, data.N * speed, 1.3f);
-                        ParticleManager.CreateParticle(data.Point2, new Color4(0, 1, 1, 1), 190, Vector2.One, data.N * speed, 1.3f);
+                    float hue1 = 2;
+                    float hue2 = (hue1 + rand.NextFloat(0, 2)) % 6f;
+                    Color4 color1 = ColorUtil.HSVToColor(hue1, 0.5f, 1);
+                    Color4 color2 = ColorUtil.HSVToColor(hue2, 0.5f, 1);
+
+                    for (int i = 0; i < 150; i++)
+                    {
+                        float speed = 12.0f * (1.0f - 1 / rand.NextFloat(1, 3));
+
+                        Color4 color = Color4.Lerp(color1, color2, rand.NextFloat(0, 1));
+                        Vector2 dir = rand.NextVector2(1, 1);
+                        ParticleManager.CreateParticle((data.Point1 + data.Point2) / 2, color, 190, Vector2.One, dir * speed, 0.2f);
                     }
-                    PlayerShip.Instance.Color = new SharpDX.Color4(0, 1, 0, 1);
                 }
-                else
-                    PlayerShip.Instance.Color = new SharpDX.Color4(1, 0, 0, 1);
             }
 
             foreach (Entity entity in Entities)
@@ -71,10 +75,49 @@ namespace RocknSpace
 
             isUpdating = false;
 
-            Entities.RemoveAll(e => e.isExpired);
+            for (int i = Entities.Count - 1; i >= 0; i--)
+            {
+                Entity ent = Entities[i];
+                if (ent.isExpired)
+                {
+                    Disposer.RemoveAndDispose(ref ent);
+                    Entities.RemoveAt(i);
+                }
+            }
+
             Entities.AddRange(addedEntities);
 
             addedEntities.Clear();
+        }
+
+        private static IEnumerable<CollisionData> GetProbableCollisions()
+        {
+            for (int i = 0; i < Entities.Count; i++)
+                for (int j = i + 1; j < Entities.Count; j++)
+                    if ((Entities[i].Position - Entities[j].Position).LengthSquared() < Math.Pow(Entities[i].Shape.Radius + Entities[j].Shape.Radius, 2))
+                        yield return new CollisionData(Entities[i], Entities[j]);
+
+            Entity e = PlayerShip.Instance;
+            if (Math.Abs(e.Position.X) + e.Shape.Radius > GameRoot.Width)
+            {
+                float maxX = 0;
+                Vector2 maxPX = Vector2.Zero;
+                float dist;
+
+                foreach (Vector2 v in e.Shape.Vertices)
+                {
+                    Vector2 o = v.Transform(e.Orientation, e.Position);
+
+                    if ((dist = Math.Abs(o.X) - GameRoot.Width) > maxX)
+                    {
+                        maxX = dist;
+                        maxPX = o;
+                    }
+                }
+
+                if (maxX > 0)
+                    yield return new CollisionData(e, new Vector2(maxPX.X < 0 ? -1 : 1, 0), maxX, maxPX);
+            }
         }
     }
 }

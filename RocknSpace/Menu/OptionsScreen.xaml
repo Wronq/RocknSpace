@@ -17,19 +17,19 @@
                 <Button Style="{StaticResource MenuButton}" Content="controls" Click="Controls_Click"/>
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="sound" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Slider Style="{StaticResource Horizontal_Slider}" Value="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Sound, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="250" Minimum="0" Maximum="100"/>
+                    <Slider Style="{StaticResource Horizontal_Slider}" Value="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.Sound, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="250" Minimum="0" Maximum="1"/>
                 </Grid>
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="music" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Slider Style="{StaticResource Horizontal_Slider}" Value="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Music, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="250" Minimum="0" Maximum="100"/>
+                    <Slider Style="{StaticResource Horizontal_Slider}" Value="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.Music, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="250" Minimum="0" Maximum="1"/>
                 </Grid>
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="blur" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Blur, Converter={StaticResource BoolToOnOffConverter}}" Click="Blur_Click"/>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.Blur, Converter={StaticResource BoolToOnOffConverter}}" Click="Blur_Click"/>
                 </Grid>
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="fullscreen" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.Fullscreen, Converter={StaticResource BoolToOnOffConverter}}" Click="Fullscreen_Click"/>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.Fullscreen, Converter={StaticResource BoolToOnOffConverter}}" Click="Fullscreen_Click"/>
                 </Grid>
                 <Button Style="{StaticResource MenuButton}" Content="back" Click="Back_Click"/>
             </StackPanel>

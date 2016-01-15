@@ -9,7 +9,6 @@ namespace RocknSpace
 {
     static class Time
     {
-        public static float TotalSeconds;
         public static float Dt;
 
         public const float TargetFramerate = 60.0f;
@@ -21,9 +20,9 @@ namespace RocknSpace
         public static void FrameBegin()
         {
             Dt = (float)(DateTime.Now - LastTime).TotalSeconds;
-            TotalSeconds = (float)(DateTime.Now - BeginTime).TotalSeconds;
 
             LastTime = DateTime.Now;
+            //Dt = 1.0f / 60.0f;
         }
 
         public static void FrameEnd()

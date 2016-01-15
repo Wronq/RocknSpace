@@ -11,10 +11,13 @@ using System.Xml.Serialization;
 
 namespace RocknSpace
 {
-    public class ProfilesDummy : INotifyPropertyChanged
+    public class Profiles : INotifyPropertyChanged
     {
         private ObservableCollection<Profile> list;
         private Profile current;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public static event EventHandler CurrentChanged;
 
         public ObservableCollection<Profile> List
         {
@@ -22,7 +25,7 @@ namespace RocknSpace
             set { list = value; propertyChanged("List"); }
         }
 
-        public Profile Current
+        public Profile CurrentProfile
         {
             get { return current; }
             set
@@ -33,14 +36,23 @@ namespace RocknSpace
             }
         }
 
-        public static ProfilesDummy Instance { get; private set; }
-
-        static ProfilesDummy()
+        public static Profiles Instance { get; private set; }
+        public static Profile Current
         {
-            Instance = new ProfilesDummy();
+            get { return Instance.CurrentProfile; }
+            set { Instance.CurrentProfile = value; if (Current.State != null) Current.State.OnLoad(); }
         }
 
-        private ProfilesDummy() { }
+        static Profiles()
+        {
+            Instance = new Profiles();
+            Load();
+        }
+
+        private Profiles()
+        {
+            List = new ObservableCollection<Profile>();
+        }
 
         private void propertyChanged(string Name)
         {
@@ -48,36 +60,67 @@ namespace RocknSpace
                 PropertyChanged(this, new PropertyChangedEventArgs(Name));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler CurrentChanged;
+        public static Profile Create(string Name)
+        {
+            Profile p = new Profile(Name);
+            Instance.List.Add(p);
+            return p;
+        }
+
+        public static Profile GetByName(string Name)
+        {
+            return Instance.List.FirstOrDefault(p => p.Name == Name);
+        }
+
+        public static void Load()
+        {
+            if (!File.Exists(Settings.ProfilesPath)) return;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Profile>));
+            TextReader reader = new StreamReader(Settings.ProfilesPath);
+            Instance.List = (ObservableCollection<Profile>)serializer.Deserialize(reader);
+            reader.Close();
+        }
+
+        public static void Save()
+        {
+            foreach (Profile profile in Instance.List)
+            {
+                if (profile.State != null)
+                    profile.State.OnSave();
+            }
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Profile>));
+            TextWriter writer = new StreamWriter(Settings.ProfilesPath);
+            serializer.Serialize(writer, Instance.List);
+            writer.Close();
+        }
     }
 
     [Serializable]
     public class Profile : INotifyPropertyChanged
     {
-        public static Profile Current
+        /*public static Profile Current
         {
-            get { return ProfilesDummy.Instance.Current; }
-            set { ProfilesDummy.Instance.Current = value; }
+            get { return Profiles.Instance.Current; }
+            set { Profiles.Instance.Current = value;  }
         }
         public static ObservableCollection<Profile> Profiles
         {
-            get { return ProfilesDummy.Instance.List; }
-            set { ProfilesDummy.Instance.List = value; }
-        }
+            get { return Profiles.Instance.List; }
+            set { Profiles.Instance.List = value; }
+        }*/
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        static Profile()
-        {
-            Profiles = new ObservableCollection<Profile>();
-            Load();
-        }
-
         private string name;
-        private Key keyup, keyleft, keyright, keyshoot, keyshield, keyrocket, keymine;
-        private int sound, music;
+        private Key keyup, keyleft, keyright, keystop;
+        private float sound, music;
         private bool blur, fullscreen;
+        private GameState state;
+
+        /*[XmlIgnore]
+        private int currentScore;*/
 
         public string Name
         {
@@ -100,33 +143,18 @@ namespace RocknSpace
             get { return keyright; }
             set { keyright = value; propertyChanged("KeyRight"); }
         }
-        public Key KeyShoot
+        public Key KeyStop
         {
-            get { return keyshoot; }
-            set { keyshoot = value; propertyChanged("KeyShoot"); }
-        }
-        public Key KeyShield
-        {
-            get { return keyshield; }
-            set { keyshield = value; propertyChanged("KeyShield"); }
-        }
-        public Key KeyRocket
-        {
-            get { return keyrocket; }
-            set { keyrocket = value; propertyChanged("KeyRocket"); }
-        }
-        public Key KeyMine
-        {
-            get { return keymine; }
-            set { keymine = value; propertyChanged("KeyMine"); }
+            get { return keystop; }
+            set { keystop = value; propertyChanged("KeyStop"); }
         }
 
-        public int Sound
+        public float Sound
         {
             get { return sound; }
             set { sound = value; propertyChanged("Sound"); }
         }
-        public int Music
+        public float Music
         {
             get { return music; }
             set { music = value; propertyChanged("Music"); }
@@ -143,6 +171,18 @@ namespace RocknSpace
             set { fullscreen = value; propertyChanged("Fullscreen"); }
         }
 
+        /*public int CurrentScore
+        {
+            get { return currentScore; }
+            set { currentScore = value; propertyChanged("CurrentScore"); }
+        }*/
+
+        public GameState State
+        {
+            get { return state; }
+            set { state = value; propertyChanged("State"); }
+        }
+
         public Profile() : this(string.Empty) { }
         public Profile(string Name)
         {
@@ -150,13 +190,10 @@ namespace RocknSpace
             KeyUp = Key.W;
             KeyLeft = Key.A;
             KeyRight = Key.D;
-            KeyShoot = Key.Space;
-            KeyShield = Key.LeftShift;
-            KeyRocket = Key.LeftCtrl;
-            KeyMine = Key.LeftAlt;
-
-            Sound = 100;
-            Music = 100;
+            KeyStop = Key.Space;
+            
+            Sound = 1.0f;
+            Music = 1.0f;
             Blur = true;
             Fullscreen = false;
         }
@@ -165,36 +202,6 @@ namespace RocknSpace
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(Name));
-        }
-
-        public static Profile Create(string Name)
-        {
-            Profile p = new Profile(Name);
-            Profiles.Add(p);
-            return p;
-        }
-
-        public static Profile GetByName(string Name)
-        {
-            return Profiles.FirstOrDefault(p => p.Name == Name);
-        }
-        
-        public static void Load()
-        {
-            if (!File.Exists(Settings.ProfilesPath)) return;
-
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Profile>));
-            TextReader reader = new StreamReader(Settings.ProfilesPath);
-            Profiles = (ObservableCollection<Profile>)serializer.Deserialize(reader);
-            reader.Close();
-        }
-
-        public static void Save()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Profile>));
-            TextWriter writer = new StreamWriter(Settings.ProfilesPath);
-            serializer.Serialize(writer, Profiles);
-            writer.Close();
         }
     }
 }

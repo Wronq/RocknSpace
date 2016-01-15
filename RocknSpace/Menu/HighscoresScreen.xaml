@@ -10,12 +10,13 @@
         <Grid>
             <Label HorizontalAlignment="Center" Content="rock'N'space" Style="{StaticResource MenuTitle}" />
             <Label HorizontalAlignment="Center" Content="hiGhScorEs" Style="{StaticResource MenuLabel}" Margin="0,156,0,0" />
-            <StackPanel Margin="0,212,0,0" Width="600">
-                <ItemsControl x:Name="itemsControl"> <!--ItemsSource="{Binding Source={x:Static local:HighscoresDummy.Instance}, Path=Entries}"-->
+            <StackPanel Margin="0,212,0,0" Width="800">
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Source={x:Static local:Highscores.Instance}, Path=entries}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Label HorizontalAlignment="Left" Content="{Binding Name}" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                                <Label HorizontalAlignment="Left" Content="{Binding PlayerName}" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                                <Label HorizontalAlignment="Right" Content="{Binding Score}" Style="{StaticResource MenuLabel}" FontSize="35"/>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

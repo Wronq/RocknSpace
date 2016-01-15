@@ -13,31 +13,19 @@
             <StackPanel Margin="0,212,0,0" Width="600">
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="fORwarD" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Up" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyUp}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
+                    <Button HorizontalAlignment="Right" ToolTip="Up" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.KeyUp}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
                 </Grid>
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="lEft" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Left" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyLeft}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
+                    <Button HorizontalAlignment="Right" ToolTip="Left" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.KeyLeft}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
                 </Grid>
                 <Grid>
                     <Label HorizontalAlignment="Left" Content="rIgHt" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyRight}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
+                    <Button HorizontalAlignment="Right" ToolTip="Right" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.KeyRight}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
                 </Grid>
                 <Grid>
-                    <Label HorizontalAlignment="Left" Content="sHOot" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Shoot" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyShoot}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
-                </Grid>
-                <Grid>
-                    <Label HorizontalAlignment="Left" Content="rOckEt" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Rocket" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyRocket}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
-                </Grid>
-                <Grid>
-                    <Label HorizontalAlignment="Left" Content="minE" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Mine" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyMine}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
-                </Grid>
-                <Grid>
-                    <Label HorizontalAlignment="Left" Content="SHield" Style="{StaticResource MenuLabel}" FontSize="35"/>
-                    <Button HorizontalAlignment="Right" ToolTip="Shield" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:ProfilesDummy.Instance}, Path=Current.KeyShield}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
+                    <Label HorizontalAlignment="Left" Content="sTop" Style="{StaticResource MenuLabel}" FontSize="35"/>
+                    <Button HorizontalAlignment="Right" ToolTip="Stop" Style="{StaticResource MenuButton}" Content="{Binding Source={x:Static local:Profiles.Instance}, Path=Current.KeyStop}" Click="Key_Click" VerticalAlignment="Center" FontSize="27"/>
                 </Grid>
                 <Button Style="{StaticResource MenuButton}" Content="bAck" Click="Back_Click"/>
             </StackPanel>

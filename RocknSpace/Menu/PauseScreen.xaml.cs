@@ -27,7 +27,7 @@ namespace RocknSpace.Menu
 
         private void Continue_Click(object sender, RoutedEventArgs e)
         {
-            MenuManager.Clear();
+            GameRoot.Instance.Resume();
         }
 
         private void Options_Click(object sender, RoutedEventArgs e)

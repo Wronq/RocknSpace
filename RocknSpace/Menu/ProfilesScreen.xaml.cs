@@ -27,13 +27,13 @@ namespace RocknSpace.Menu
 
         private void Profile_Click(object sender, RoutedEventArgs e)
         {
-            Profile.Current = Profile.GetByName(((Button)sender).Content.ToString());
+            Profiles.Current = Profiles.GetByName(((Button)sender).Content.ToString());
             MenuManager.Add(MenuType.Main);
         }
     
         private void AddNew_Click(object sender, RoutedEventArgs e)
         {
-            Profile.Create(txtName.Text);
+            Profiles.Create(txtName.Text);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

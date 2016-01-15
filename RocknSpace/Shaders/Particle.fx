@@ -1,5 +1,6 @@
 ﻿float4 Overlay : OverlayColor;
 float2 Projection;
+float2 Camera;
 
 struct VS_IN
 {
@@ -49,6 +50,12 @@ void GS( point GS_IN input[1], inout TriangleStream<PS_IN> triStream )
 	float3x3 translation = {1, 0, input[0].pos[0],
 							0, 1, input[0].pos[1],
 							0, 0, 1};
+
+	float3x3 camera = { 1, 0, Camera[0],
+					    0, 1, Camera[1],
+		                0, 0, 1 };
+
+	translation = mul(translation, camera);
 
 	float3x3 rotation = {cos(alfa), sin(alfa), 0,
 						 -sin(alfa), cos(alfa), 0,

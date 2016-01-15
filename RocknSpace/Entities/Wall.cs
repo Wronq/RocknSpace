@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,20 @@ namespace RocknSpace.Entities
 
         public Wall()
         {
-            
+            MassInv = 0;
+            InertiaInv = 0;
+            Position = Vector2.Zero;
+            Velocity = Vector2.Zero;
+            Omega = 0;
         }
+
+        public override void PreUpdate()
+        { }
+
+        public override void Update()
+        { }
+
+        public override void PostUpdate()
+        { }
     }
 }

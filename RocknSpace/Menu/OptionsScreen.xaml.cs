@@ -32,13 +32,13 @@ namespace RocknSpace.Menu
 
         private void Blur_Click(object sender, RoutedEventArgs e)
         {
-            Profile.Current.Blur = !Profile.Current.Blur;
+            Profiles.Current.Blur = !Profiles.Current.Blur;
         }
 
         private void Fullscreen_Click(object sender, RoutedEventArgs e)
         {
-            Profile.Current.Fullscreen = !Profile.Current.Fullscreen;
-            MainWindow.Instance.Fullscreen = Profile.Current.Fullscreen;
+            Profiles.Current.Fullscreen = !Profiles.Current.Fullscreen;
+            MainWindow.Instance.Fullscreen = Profiles.Current.Fullscreen;
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)

@@ -46,32 +46,17 @@ namespace RocknSpace
                 Scale.X = LengthMultiplier * Math.Min(Math.Min(1f, 0.2f * speed + 0.1f), alpha);
 
                 var pos = Position;
-                int width = (int)500;
-                int height = (int)500;
+                int width = (int)GameRoot.Width;
+                int height = (int)GameRoot.Height;
 
-                // collide with the edges of the screen
-                if (pos.X < -500) Velocity.X = Math.Abs(Velocity.X);
+                if (pos.X < -width) Velocity.X = Math.Abs(Velocity.X);
                 else if (pos.X > width)
                     Velocity.X = -Math.Abs(Velocity.X);
-                if (pos.Y < -500) Velocity.Y = Math.Abs(Velocity.Y);
-                else if (pos.Y > height)
-                    Velocity.Y = -Math.Abs(Velocity.Y);
                 
-                /*foreach (var Object in EntityManager.bvhTree.CheckCollision(Position))
-                {
-                    Vector2 mtv = CollisionData.Check(Object, Position);
-
-                    if (mtv != Vector2.Zero)
-                    {
-                        mtv.Normalize();
-                        Velocity += (2 * Velocity.Dot(-mtv)) * mtv;
-                    }
-                }*/
-                // denormalized floats cause significant performance issues
                 if (Math.Abs(Velocity.X) + Math.Abs(Velocity.Y) < 0.00000000001f)
                     Velocity = Vector2.Zero;
 
-                Velocity *= 0.97f;       // particles gradually slow down
+                Velocity *= 0.97f;
             }
         }
 
@@ -100,10 +85,8 @@ namespace RocknSpace
             }
         }
 
-        private const int capacity = 20000;// * 1024;
+        private const int capacity = 20 * 1024;
         public static CircularParticleArray particleList = new CircularParticleArray(capacity);
-
-        
 
         static ParticleManager()
         {

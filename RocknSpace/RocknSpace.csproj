@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -96,7 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Collision\BVHTree.cs" />
+    <Content Include="Collision\BVHTree.cs" />
     <Compile Include="Collision\CircleShape.cs" />
     <Compile Include="Collision\CollisionData.cs" />
     <Compile Include="Collision\IShape.cs" />
@@ -105,12 +108,17 @@
     <Compile Include="Entities\Rock.cs" />
     <Compile Include="Entities\Wall.cs" />
     <Compile Include="GameRoot.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Highscores.cs" />
     <Compile Include="HUD.xaml.cs">
       <DependentUpon>HUD.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IOnDeserialized.cs" />
     <Compile Include="Menu\ControlsScreen.xaml.cs">
       <DependentUpon>ControlsScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\GameOverScreen.xaml.cs">
+      <DependentUpon>GameOverScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Menu\HelpScreen.xaml.cs">
       <DependentUpon>HelpScreen.xaml</DependentUpon>
@@ -128,14 +136,14 @@
     <Compile Include="Menu\PauseScreen.xaml.cs">
       <DependentUpon>PauseScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Menu\ProfileScreen.xaml.cs">
-      <DependentUpon>ProfileScreen.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Menu\ProfilesScreen.xaml.cs">
       <DependentUpon>ProfilesScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profile.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Sounds\Jet.cs" />
+    <Compile Include="Sounds\Music.cs" />
+    <Compile Include="Sounds\Sound.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="DirectWpf\BloomSettings.cs" />
     <Compile Include="Utils\Disposer.cs" />
@@ -149,8 +157,34 @@
     <Compile Include="Entities\PhysicsEntity.cs" />
     <Compile Include="Entities\PlayerShip.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="Utils\Vector.cs" />
     <Compile Include="ValueConverters.cs" />
+    <Resource Include="icon.ico" />
+    <Resource Include="Images\icon.png" />
+    <Resource Include="Images\help.jpg" />
+    <None Include="Sounds\jet00.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\jet01.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\jet02.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\jet03.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\jet04.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\background.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\click.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Line.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Page Include="AppWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -172,6 +206,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Menu\GameOverScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Menu\HelpScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -189,10 +227,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Menu\PauseScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Menu\ProfileScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
