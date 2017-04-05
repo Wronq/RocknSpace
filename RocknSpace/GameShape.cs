@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Shapes;
 using SharpDX;
-using SharpDX.D3DCompiler;
 using SharpDX.Direct3D10;
-using SharpDX.DXGI;
 using Buffer = SharpDX.Direct3D10.Buffer;
-using Device = SharpDX.Direct3D10.Device;
 using RocknSpace.Utils;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace RocknSpace
@@ -28,22 +19,20 @@ namespace RocknSpace
         private Buffer buf;
 
         public GameShape()
-        {
+        { }
 
-        }
-
-        public GameShape(Vector2[] Vertices)
+        public GameShape(Vector2[] vertices)
         {
-            this.Vertices = Vertices;
+            this.Vertices = vertices;
 
             Vector2 Center = Vector2.Zero;
 
-            foreach (Vector2 vertex in Vertices)
+            foreach (Vector2 vertex in vertices)
                 Center += vertex;
-            Center /= Vertices.Count();
+            Center /= vertices.Count();
 
-            for (int i = 0; i < Vertices.Length; i++)
-                Vertices[i] -= Center;
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i] -= Center;
 
             CreateBuffers();
         }

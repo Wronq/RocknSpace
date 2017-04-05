@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using RocknSpace.Collision;
 using RocknSpace.Entities;
 using SharpDX;
@@ -15,17 +11,16 @@ namespace RocknSpace
     {
         public static List<Entity> Entities = new List<Entity>();
         private static List<Entity> addedEntities = new List<Entity>();
-        //public static BVHTree<CircleShape> bvhTree = new BVHTree<CircleShape>();
 
         static bool isUpdating = false;
         public static int Count { get { return Entities.Count; } }
 
-        public static void Add(Entity Entity)
+        public static void Add(Entity entity)
         {
             if (isUpdating)
-                addedEntities.Add(Entity);
+                addedEntities.Add(entity);
             else
-                Entities.Add(Entity);      
+                Entities.Add(entity);      
         }
 
         public static void Update()
@@ -35,7 +30,6 @@ namespace RocknSpace
             foreach (Entity entity in Entities)
                 entity.PreUpdate();
 
-            //bvhTree.Recalculate();
             IEnumerable<CollisionData> Collisions = GetProbableCollisions();
 
             foreach (CollisionData data in Collisions)

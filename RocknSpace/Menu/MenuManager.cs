@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -32,17 +28,17 @@ namespace RocknSpace.Menu
             Menus = new Dictionary<MenuType, UserControl>();
         }
 
-        public static void Register(MenuType Type, UserControl Menu)
+        public static void Register(MenuType type, UserControl menu)
         {
-            Menus.Add(Type, Menu);
+            Menus.Add(type, menu);
         }
 
-        public static void Add(MenuType Type)
+        public static void Add(MenuType type)
         {
             if (Current != null)
                 Current.Visibility = Visibility.Hidden;
 
-            MenuStack.Push(Menus[Type]);
+            MenuStack.Push(Menus[type]);
             currentChanged();
         }
 
@@ -72,8 +68,7 @@ namespace RocknSpace.Menu
             if (Current != null)
                 Current.Visibility = Visibility.Visible;
 
-            if (CurrentChanged != null)
-                CurrentChanged(Current, EventArgs.Empty);
+            CurrentChanged?.Invoke(Current, EventArgs.Empty);
         }
     }
 }

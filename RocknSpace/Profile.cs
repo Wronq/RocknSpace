@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 
@@ -31,8 +28,7 @@ namespace RocknSpace
             set
             {
                 current = value; propertyChanged("Current");
-                if(CurrentChanged != null)
-                    CurrentChanged(Current, EventArgs.Empty);
+                CurrentChanged?.Invoke(Current, EventArgs.Empty);
             }
         }
 
@@ -54,22 +50,21 @@ namespace RocknSpace
             List = new ObservableCollection<Profile>();
         }
 
-        private void propertyChanged(string Name)
+        private void propertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(Name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public static Profile Create(string Name)
+        public static Profile Create(string name)
         {
-            Profile p = new Profile(Name);
+            Profile p = new Profile(name);
             Instance.List.Add(p);
             return p;
         }
 
-        public static Profile GetByName(string Name)
+        public static Profile GetByName(string name)
         {
-            return Instance.List.FirstOrDefault(p => p.Name == Name);
+            return Instance.List.FirstOrDefault(p => p.Name == name);
         }
 
         public static void Load()
@@ -100,17 +95,6 @@ namespace RocknSpace
     [Serializable]
     public class Profile : INotifyPropertyChanged
     {
-        /*public static Profile Current
-        {
-            get { return Profiles.Instance.Current; }
-            set { Profiles.Instance.Current = value;  }
-        }
-        public static ObservableCollection<Profile> Profiles
-        {
-            get { return Profiles.Instance.List; }
-            set { Profiles.Instance.List = value; }
-        }*/
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string name;
@@ -118,9 +102,6 @@ namespace RocknSpace
         private float sound, music;
         private bool blur, fullscreen;
         private GameState state;
-
-        /*[XmlIgnore]
-        private int currentScore;*/
 
         public string Name
         {
@@ -171,12 +152,6 @@ namespace RocknSpace
             set { fullscreen = value; propertyChanged("Fullscreen"); }
         }
 
-        /*public int CurrentScore
-        {
-            get { return currentScore; }
-            set { currentScore = value; propertyChanged("CurrentScore"); }
-        }*/
-
         public GameState State
         {
             get { return state; }
@@ -184,9 +159,9 @@ namespace RocknSpace
         }
 
         public Profile() : this(string.Empty) { }
-        public Profile(string Name)
+        public Profile(string name)
         {
-            this.Name = Name;
+            this.Name = name;
             KeyUp = Key.W;
             KeyLeft = Key.A;
             KeyRight = Key.D;
@@ -198,10 +173,9 @@ namespace RocknSpace
             Fullscreen = false;
         }
 
-        private void propertyChanged(string Name)
+        private void propertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(Name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

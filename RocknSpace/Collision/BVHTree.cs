@@ -151,42 +151,23 @@ namespace RocknSpace.Collision
             }
         }
 
-        public IEnumerable<Entity> CheckCollision(Vector2 Point)
+        public IEnumerable<Entity> CheckCollision(Vector2 point)
         {
-            foreach (Entity e in CheckCollision(Point, Root))
+            foreach (Entity e in CheckCollision(point, Root))
                 yield return e;
         }
 
-        private IEnumerable<Entity> CheckCollision(Vector2 Point, Node Node)
+        private IEnumerable<Entity> CheckCollision(Vector2 point, Node node)
         {
-            if (Node.entity != null)
-                yield return Node.entity;
-            else if (Node.Shape.Overlap(Point))
+            if (node.entity != null)
+                yield return node.entity;
+            else if (node.Shape.Overlap(point))
             {
-                foreach (Entity e in CheckCollision(Point, Node.Left))
+                foreach (Entity e in CheckCollision(point, node.Left))
                     yield return e;
-                foreach (Entity e in CheckCollision(Point, Node.Right))
+                foreach (Entity e in CheckCollision(point, node.Right))
                     yield return e;
             }
         }
-
-        /*private IEnumerable<CollisionData> GetWallCollisions()
-        {
-            foreach (var data in GetProbableCollisions(Root.Left, Root.Right))
-                yield return data;
-        }
-
-        private IEnumerable<CollisionData> GetWallCollisions(Node Node)
-        {
-            if (Node.entity != null)
-                yield return Node.entity;
-            else if (Node.Shape.Overlap(Point))
-            {
-                foreach (Entity e in CheckCollision(Point, Node.Left))
-                    yield return e;
-                foreach (Entity e in CheckCollision(Point, Node.Right))
-                    yield return e;
-            }
-        }*/
     }
 }

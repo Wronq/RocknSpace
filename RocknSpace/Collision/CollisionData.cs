@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Runtime.CompilerServices;
-using RocknSpace;
 using SharpDX;
 using RocknSpace.Utils;
 using RocknSpace.Entities;
@@ -32,21 +28,21 @@ namespace RocknSpace.Collision
             IsCollision = false;
         }
 
-        public CollisionData(Entity Object1, Entity Object2) : this()
+        public CollisionData(Entity object1, Entity object2) : this()
         {
-            this.Object1 = Object1;
-            this.Object2 = Object2;
+            Object1 = object1;
+            Object2 = object2;
 
-            simplex = new Simplex(Object1.Shape.Vertices.Count() + Object2.Shape.Vertices.Count());
+            simplex = new Simplex(object1.Shape.Vertices.Count() + object2.Shape.Vertices.Count());
         }
 
-        public CollisionData(Entity Object1, Vector2 N, float Depth, Vector2 Point) : this()
+        public CollisionData(Entity object1, Vector2 normalVector, float depth, Vector2 point) : this()
         {
-            this.Object1 = Object1;
-            this.N = N;
-            this.Depth = Depth * 2;
+            Object1 = object1;
+            N = normalVector;
+            Depth = depth * 2;
 
-            Point1 = Point2 = Point;
+            Point1 = Point2 = point;
             Object2 = Wall.Instance;
             IsCollision = true;
         }
@@ -69,9 +65,9 @@ namespace RocknSpace.Collision
             Depth = -Depth;
         }
 
-        private static float Orient(Vector2 A, Vector2 B)
+        private static float Orient(Vector2 a, Vector2 b)
         {
-            return (B.X - A.X) * (-A.Y) - (-A.X) * (B.Y - A.Y);
+            return (b.X - a.X) * (-a.Y) - (-a.X) * (b.Y - a.Y);
         }
 
         public bool Check()
@@ -85,7 +81,6 @@ namespace RocknSpace.Collision
             simplex.Add(MinkowskiDiff.Support(Object1, Object2, axis));
             simplex.Add(MinkowskiDiff.Support(Object1, Object2, -axis));
 
-            //axis = GetClosestPoint(simplex[0].S, simplex[1].S);
             axis = (simplex[1].S - simplex[0].S).Perpendicular();
             if (Orient(simplex[0].S, simplex[1].S) < 0)
                 axis = -axis;
@@ -98,7 +93,7 @@ namespace RocknSpace.Collision
                 {
                     return false;
                 }
-                else if (simplex.containsOrigin(ref axis))
+                else if (simplex.ContainsOrigin(ref axis))
                 {
                     float do1 = simplex[0].S.LengthSquared();
                     float do2 = simplex[1].S.LengthSquared();
@@ -202,50 +197,8 @@ namespace RocknSpace.Collision
             float j1 = N.Dot(N) * (p1.MassInv + p2.MassInv);
             float j2 = (float)Math.Pow(rAP.Dot(N), 2) * p1.InertiaInv;
             float j3 = (float)Math.Pow(rBP.Dot(N), 2) * p2.InertiaInv;
-            //j /= Data.N.Dot(Data.N) * (MassInv + p2.MassInv) + (float)Math.Pow(rAP.Dot(Data.N), 2) * InertiaInv + (float)(Math.Pow(rBP.Dot(Data.N), 2) * p2.InertiaInv);
+            
             J = j / (j1 + j2 + j3);
         }
-
-        /*public static Vector2 Check(Entity Object, Vector2 Point)
-        {
-            float overlap = float.MaxValue;
-            Vector2 direction = Vector2.Zero;
-
-            for (int j = 0; j < Object.Shape.Axes.Length; j++)
-            {
-                Vector2 axis = Object.Shape.Axes[j];
-
-                Vector2 rotatedAxis = axis.Transform(Object.Orientation, Vector2.Zero).Normal();
-
-                float min1 = rotatedAxis.Dot(Object.Shape.Vertices[0].Transform(Object.Orientation, Object.Position));
-                float max1 = min1;
-                float pt2 = rotatedAxis.Dot(Point);
-
-                for (int i = 1; i < Object.Shape.Vertices.Length; i++)
-                {
-                    float dot = rotatedAxis.Dot(Object.Shape.Vertices[i].Transform(Object.Orientation, Object.Position));
-                    if (min1 > dot) min1 = dot;
-                    else if (max1 < dot) max1 = dot;
-                }
-
-                if (min1 > pt2 || max1 < pt2)
-                    return Vector2.Zero;
-                else
-                {
-                    float o = Math.Min(Math.Abs(pt2 - min1), Math.Abs(pt2 - max1));
-
-                    if (o < overlap)
-                    {
-                        overlap = o;
-
-                        direction = rotatedAxis;
-                        if (Math.Abs(pt2 - min1) > Math.Abs(pt2 - max1))
-                            direction = -direction;
-                    }
-                }
-            }
-
-            return direction.Normal() * overlap;
-        }*/
     }
 }

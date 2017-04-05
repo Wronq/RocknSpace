@@ -1,12 +1,8 @@
 ﻿using SharpDX;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RocknSpace.Entities;
 using System.Xml.Serialization;
-using System.IO;
 using System.ComponentModel;
 
 namespace RocknSpace
@@ -45,10 +41,9 @@ namespace RocknSpace
             }
         }
 
-        private void propertyChanged(string Name)
+        private void propertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(Name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public void OnSave()
@@ -78,24 +73,5 @@ namespace RocknSpace
                 EntityManager.Add(rock);
             }
         }
-
-        /*
-        public static void Load()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Rock));
-            TextReader reader = new StreamReader("State.xml");
-            Rock s = (Rock)serializer.Deserialize(reader);
-            s.OnDeserialized();
-
-            reader.Close();
-        }
-
-        public static void Save()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Rock));
-            TextWriter writer = new StreamWriter("State.xml");
-            serializer.Serialize(writer, EntityManager.Entities[2]);
-            writer.Close();
-        }*/
     }
 }

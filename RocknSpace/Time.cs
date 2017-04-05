@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace RocknSpace
@@ -16,13 +12,11 @@ namespace RocknSpace
         private static DateTime BeginTime = DateTime.Now;
         private static DateTime LastTime = DateTime.Now;
 
-
         public static void FrameBegin()
         {
             Dt = (float)(DateTime.Now - LastTime).TotalSeconds;
 
             LastTime = DateTime.Now;
-            //Dt = 1.0f / 60.0f;
         }
 
         public static void FrameEnd()

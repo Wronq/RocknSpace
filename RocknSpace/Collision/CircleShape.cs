@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 using RocknSpace.Entities;
 
@@ -40,16 +36,16 @@ namespace RocknSpace.Collision
         public CircleShape(float x, float y, float radius) : this(new Vector2(x, y), radius)
         { }
 
-        public CircleShape(Vector2 Center, float Radius)
+        public CircleShape(Vector2 center, float radius)
         {
-            center = Center;
-            radius = Radius;
+            this.center = center;
+            this.radius = radius;
         }
 
-        public IShape CreateFromEntity(Entity Entity)
+        public IShape CreateFromEntity(Entity entity)
         {
-            center = Entity.Position;
-            radius = Entity.Shape.Radius;
+            center = entity.Position;
+            radius = entity.Shape.Radius;
             return this;
         }
 

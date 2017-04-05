@@ -7,7 +7,7 @@
         xmlns:menu="clr-namespace:RocknSpace.Menu"
         xmlns:dpf="clr-namespace:RocknSpace.DirectWpf"
         mc:Ignorable="d"
-        Title="Rock'n'Space" Height="850" Width="1200" MinHeight="100" MinWidth="100" Icon="Images/icon.png">
+        Title="Rock'n'Space" Height="850" Width="1200" MinHeight="100" MinWidth="100" Icon="/RocknSpace.Assets;component/Images/icon.png">
     <Grid Background="Black">
         <dpf:DPFCanvas x:Name="Canvas1" Stretch="Fill"/>
         <menu:ProfilesScreen x:Name="ScreenProfiles" Style="{StaticResource MenuScreen}" />

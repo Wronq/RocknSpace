@@ -13,11 +13,11 @@
         <SolidColorBrush x:Key="TransparentBrush" Color="#00FFFFFF"/>
         
         <Style x:Key="Aurora">
-            <Setter Property="TextElement.FontFamily" Value="/RocknSpace;component/Fonts/#aurora" />
+            <Setter Property="TextElement.FontFamily" Value="/RocknSpace.Assets;component/Fonts/#aurora" />
         </Style>
 
         <Style x:Key="OuterLimits">
-            <Setter Property="TextElement.FontFamily" Value="/RocknSpace;component/Fonts/#SF Outer Limits Distorted" />
+            <Setter Property="TextElement.FontFamily" Value="/RocknSpace.Assets;component/Fonts/#SF Outer Limits Distorted" />
         </Style>
 
         <Style x:Key="MenuScreen" TargetType="{x:Type UserControl}">
@@ -171,7 +171,7 @@
         <SolidColorBrush x:Key="ControlLightBrush" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="BorderMediumBrush" Color="#00FF00FF"/>
         <Style x:Key="MenuTextbox" TargetType="{x:Type TextBox}">
-            <Setter Property="TextElement.FontFamily" Value="/RocknSpace;component/Fonts/#aurora" />
+            <Setter Property="TextElement.FontFamily" Value="/RocknSpace.Assets;component/Fonts/#aurora" />
             <Setter Property="TextElement.FontSize" Value="30" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="OverridesDefaultStyle" Value="True" />

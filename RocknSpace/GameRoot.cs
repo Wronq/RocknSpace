@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D10;
@@ -55,7 +51,7 @@ namespace RocknSpace
         
         public void Attach(ISceneHost host)
         {
-            this.Host = host;
+            Host = host;
 
             Device device = host.Device;
             if (device == null)
@@ -64,7 +60,7 @@ namespace RocknSpace
             try
             {
                 ShaderBytecode shaderBytes = ShaderBytecode.CompileFromFile("Shaders\\Particle.fx", "fx_4_0", ShaderFlags.None, EffectFlags.None, null, null);
-                this.ParticleEffect = new Effect(device, shaderBytes);
+                ParticleEffect = new Effect(device, shaderBytes);
             }
             catch
             { }
@@ -72,7 +68,7 @@ namespace RocknSpace
             try
             {
                 ShaderBytecode shaderBytes = ShaderBytecode.CompileFromFile("Shaders\\Shape.fx", "fx_4_0", ShaderFlags.None, EffectFlags.None, null, null);
-                this.ShapeEffect = new Effect(device, shaderBytes);
+                ShapeEffect = new Effect(device, shaderBytes);
             }
             catch
             { }
@@ -80,7 +76,7 @@ namespace RocknSpace
             try
             {
                 ShaderBytecode shaderBytes = ShaderBytecode.CompileFromFile("Shaders\\Line.fx", "fx_4_0", ShaderFlags.None, EffectFlags.None, null, null);
-                this.LineEffect = new Effect(device, shaderBytes);
+                LineEffect = new Effect(device, shaderBytes);
             }
             catch
             { }
@@ -282,7 +278,6 @@ namespace RocknSpace
             ParticleCamera.Set(new Vector2(0, -PlayerShip.Instance.Position.Y));
             device.Draw(ParticleManager.particleList.Count, 0);
 
-
             device.InputAssembler.InputLayout = this.ShapeLayout;
             device.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleStrip;
 
@@ -307,13 +302,10 @@ namespace RocknSpace
 
                 device.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(LineBuffer, 8, 0));
 
-
                 LineEffect.GetVariableByName("Step").AsScalar().Set(0.1f);
                 LineEffect.GetVariableByName("Width").AsScalar().Set(2.0f / Width);
                 LineEffect.GetVariableByName("Height").AsScalar().Set(1.0f - Math.Abs(Profiles.Current.State.LinesPosition - PlayerShip.Instance.Position.Y) / Height);
                 LineEffect.GetVariableByName("Color").AsVector().Set(Color.Yellow);
-
-
 
                 Vector4[] disturb = new Vector4[16];
                 float maxX = 0.05f, maxY = 0.02f;

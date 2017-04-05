@@ -1,10 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -35,16 +32,15 @@ namespace RocknSpace
 
             public Entry() : this("", 0) { }
 
-            public Entry(string Name, int Score)
+            public Entry(string name, int score)
             {
-                this.PlayerName = Name;
-                this.Score = Score;
+                PlayerName = name;
+                Score = score;
             }
 
-            private void propertyChanged(string Name)
+            private void propertyChanged(string name)
             {
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs(Name));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
 
@@ -80,21 +76,21 @@ namespace RocknSpace
             Add(Profiles.Current.Name, Profiles.Current.State.Score);
         }
 
-        public static void Add(int Score)
+        public static void Add(int score)
         {
-            Add(Profiles.Current.Name, Score);
+            Add(Profiles.Current.Name, score);
         }
 
-        public static void Add(string Name, int Score)
+        public static void Add(string name, int score)
         {
-            Instance.LastScore = Score;
+            Instance.LastScore = score;
 
             int i = 0;
             for (; i < Entries.Count; i++)
-                if (Entries[i].Score < Score)
+                if (Entries[i].Score < score)
                     break;
 
-            Entries.Insert(i, new Entry(Name, Score));
+            Entries.Insert(i, new Entry(name, score));
 
             while (Entries.Count > 9)
                 Entries.Remove(Entries.FirstOrDefault(e1 => e1.Score == Entries.Min(e2 => e2.Score)));
@@ -120,10 +116,9 @@ namespace RocknSpace
             writer.Close();
         }
 
-        private void propertyChanged(string Name)
+        private void propertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(Name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 
 namespace RocknSpace.Utils
 {
     static class Extensions
     {
-        /*public static float NextFloat(this Random rand, float maxValue = 1.0f, float minValue=0.0f)
-        {
-            return (float)rand.NextDouble() * (maxValue - minValue) + minValue;
-        }*/
-
         public static Vector2 NextVector2(this Random rand, float maxLength = 1.0f, float minLength = 1.0f)
         {
             double theta = rand.NextDouble() * 2 * Math.PI;

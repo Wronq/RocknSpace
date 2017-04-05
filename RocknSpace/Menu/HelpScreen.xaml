@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Image x:Name="image" Source="/RocknSpace;component/Images/help.jpg" Stretch="Fill"/>
+        <Image x:Name="image" Source="/RocknSpace.Assets;component/Images/help.jpg" Stretch="Fill"/>
         <ContentControl Style="{StaticResource MenuBackground}" Height="200" Width="322" MinHeight="100" MinWidth="100">
             <Grid>
                 <Button Style="{StaticResource MenuButton}" Content="gOt iT" Click="Back_Click" Margin="53,68,46,-68" Width="223"/>

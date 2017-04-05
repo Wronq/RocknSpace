@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
+﻿using SharpDX;
 using RocknSpace.Utils;
 
 namespace RocknSpace.Collision
@@ -21,29 +16,6 @@ namespace RocknSpace.Collision
                 Distance = float.MaxValue;
             }
         }
-
-        public string Matlab
-        {
-            get
-            {
-                string ret = "X = [";
-                for (int i = 0; i < count; i++)
-                    ret += points[i].S.X + " ";
-
-                ret += points[0].S.X;
-                ret += "]; Y = [";
-
-                for (int i = 0; i < count; i++)
-                    ret += points[i].S.Y + " ";
-                ret += points[0].S.Y;
-                ret += "];";
-
-
-                return ret.Replace(",", ".");
-            }
-        }
-
-        
 
         private MinkowskiDiff[] points;
         private int count;
@@ -69,7 +41,7 @@ namespace RocknSpace.Collision
                 int k = i == count - 1 ? 0 : i + 1;
 
                 Vector2 e = points[k].S - points[i].S;
-                Vector2 n = points[i].S * e.Dot(e) - e * e.Dot(points[i].S);//e * points[i].S.Dot(e);
+                Vector2 n = points[i].S * e.Dot(e) - e * e.Dot(points[i].S);
                 n.Normalize();
 
                 float d = n.Dot(points[i].S); 
@@ -83,7 +55,7 @@ namespace RocknSpace.Collision
             return closest;
         }
 
-        public bool containsOrigin(ref Vector2 d)
+        public bool ContainsOrigin(ref Vector2 d)
         {
             Vector2 a = points[2].S;
             Vector2 b = points[1].S;
@@ -113,24 +85,24 @@ namespace RocknSpace.Collision
             return false;
         }
 
-        public void Add(MinkowskiDiff Value)
+        public void Add(MinkowskiDiff value)
         {
-            points[count++] = Value;
+            points[count++] = value;
         }
 
-        public void Add(MinkowskiDiff Value, int index)
+        public void Add(MinkowskiDiff value, int index)
         {
             index = (count + index) % count;
             for (int i = count - 1; i >= index; i--)
                 points[i + 1] = points[i];
 
-            points[index] = Value;
+            points[index] = value;
             count++;
         }
 
-        public void Remove(int Index)
+        public void Remove(int index)
         {
-            for (int i = Index; i < count; i++)
+            for (int i = index; i < count; i++)
                 points[i] = points[i + 1];
 
             count--;

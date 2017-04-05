@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Media;
-using System.Windows.Media;
-using RocknSpace.Utils;
+﻿using RocknSpace.Utils;
 using SharpDX;
 using RocknSpace.Collision;
 using System.Xml.Serialization;
@@ -33,15 +26,15 @@ namespace RocknSpace.Entities
             Force = Vector2.Zero;
         }
 
-        public PhysicsEntity(GameShape Shape)
+        public PhysicsEntity(GameShape shape)
         {
             float dens = 1.0f;
-            this.Shape = Shape;
+            Shape = shape;
 
-            Mass = Shape.GetMass(dens);
+            Mass = shape.GetMass(dens);
             MassInv = 1 / Mass;
 
-            Inertia = Shape.GetInertia(dens);
+            Inertia = shape.GetInertia(dens);
             InertiaInv = 1 / Inertia;
         }
 
@@ -54,15 +47,13 @@ namespace RocknSpace.Entities
         }
 
         public override void Update()
-        {
-            
-        }
+        { }
 
-        public void Collision(CollisionData Data)
+        public void Collision(CollisionData data)
         {
-            Velocity = Velocity + Data.J * MassInv * Data.N;
-            Omega = Omega + Data.rAP.Dot(Data.J * Data.N) * InertiaInv;
-            Position -= Data.N * Data.Depth / 2;
+            Velocity = Velocity + data.J * MassInv * data.N;
+            Omega = Omega + data.rAP.Dot(data.J * data.N) * InertiaInv;
+            Position -= data.N * data.Depth / 2;
         }
 
         public override void PostUpdate()

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 using RocknSpace.Utils;
-using RocknSpace.Entities;
 
 namespace RocknSpace.Entities
 {
@@ -54,7 +49,7 @@ namespace RocknSpace.Entities
             return rock;
         }
 
-        public static Rock Create(Vector2 Position, float radius)
+        public static Rock Create(Vector2 position, float radius)
         {
             int numVertices = rand.Next(5, 8);
             float angleSpace = (float)Math.PI * 2 / numVertices;
@@ -68,10 +63,8 @@ namespace RocknSpace.Entities
                 points[i] = new Vector2(radius * (float)Math.Cos(angle), radius * (float)Math.Sin(angle));
             }
 
-            //points = new Vector2[] { new Vector2(-100, -100), new Vector2(100, -100), new Vector2(100, 100), new Vector2(-100, 100) };
-            
             Rock r = new Rock(new GameShape(points));
-            r.Position = Position;
+            r.Position = position;
 
             return r;
         }

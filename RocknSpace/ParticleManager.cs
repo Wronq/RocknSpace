@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Shapes;
 using SharpDX;
 using RocknSpace.Utils;
-using RocknSpace.Collision;
 
 namespace RocknSpace
 {
@@ -129,10 +121,8 @@ namespace RocknSpace
                 particle.Update();
                 particle.PercentLife -= 1f / particle.Duration;
 
-                // sift deleted particles to the end of the list
                 Swap(particleList, i - removalCount, i);
 
-                // if the particle has expired, delete this particle
                 if (particle.PercentLife < 0)
                     removalCount++;
             }

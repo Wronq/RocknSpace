@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 
 namespace RocknSpace.Sounds
@@ -26,8 +19,7 @@ namespace RocknSpace.Sounds
             private set
             {
                 soundVolume = value;
-                if (SoundVolumeChanged != null)
-                    SoundVolumeChanged(SoundVolume, EventArgs.Empty);
+                SoundVolumeChanged?.Invoke(SoundVolume, EventArgs.Empty);
             }
         }
         public static float MusicVolume
@@ -39,8 +31,7 @@ namespace RocknSpace.Sounds
             private set
             {
                 musicVolume = value;
-                if (MusicVolumeChanged != null)
-                    MusicVolumeChanged(MusicVolume, EventArgs.Empty);
+                MusicVolumeChanged?.Invoke(MusicVolume, EventArgs.Empty);
             }
         }
 
@@ -88,7 +79,6 @@ namespace RocknSpace.Sounds
         {
             player = new MediaPlayer();
             
-            //player.SetBinding(MediaElement.VolumeProperty, musicBinding);
             player.Open(new Uri(Path, UriKind.Relative));
             player.MediaEnded += Music_MediaEnded;
             
