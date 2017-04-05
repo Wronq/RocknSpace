@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocknSpace", "RocknSpace\RocknSpace.csproj", "{AD1FEDE4-8D0B-42F4-B240-AB81002AAD3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocknSpace.Assets", "RocknSpace.Assets\RocknSpace.Assets.csproj", "{7DB064A0-4B05-4347-A626-3F86680BB9C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,18 @@ Global
 		{AD1FEDE4-8D0B-42F4-B240-AB81002AAD3C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AD1FEDE4-8D0B-42F4-B240-AB81002AAD3C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD1FEDE4-8D0B-42F4-B240-AB81002AAD3C}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DB064A0-4B05-4347-A626-3F86680BB9C8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
